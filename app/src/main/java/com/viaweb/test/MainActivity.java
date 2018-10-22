@@ -1,6 +1,9 @@
 package com.viaweb.test;
 
 import android.app.FragmentTransaction;
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
@@ -21,6 +24,44 @@ public class MainActivity extends AppCompatActivity
     private AddFood addFood;
     private FragmentTransaction ft;
     private Fragment searchProduct;
+    private SingIn singIn;
+
+
+    private class SQLiteConnector extends SQLiteOpenHelper {
+        private Context context;
+
+        public SQLiteConnector(Context context, String name,
+                               int version) {
+            super(context, name, null, version);
+            this.context=context;
+            Toast.makeText(context, "DB has been connected", Toast.LENGTH_SHORT).show();
+            // TODO Auto-generated constructor stub
+        }
+
+        @Override
+        public void onCreate(SQLiteDatabase db) {
+            db.execSQL("Create table hostoryFoods(_id integer primary key autoincrement,name varchar(50), email varchar(50));");
+            Toast.makeText(context, "DB has been created", Toast.LENGTH_SHORT).show();
+
+
+
+        }
+
+        @Override
+        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+            if(oldVersion==1&&newVersion==2){
+
+            }else if(oldVersion==2&&newVersion==3){
+
+            }else if(oldVersion==1&&newVersion==3){
+
+            }
+
+        }
+
+    }
+
 
 
     @Override
@@ -89,6 +130,8 @@ public class MainActivity extends AppCompatActivity
             switch (id){
                 case R.id.sing_in:
                     Toast.makeText(this,"sing in",Toast.LENGTH_SHORT).show();
+
+
                     break;
                 case R.id.sing_out:
                     Toast.makeText(this,"sing out",Toast.LENGTH_SHORT).show();
