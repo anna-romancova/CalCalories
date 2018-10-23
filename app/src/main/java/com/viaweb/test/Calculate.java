@@ -1,11 +1,22 @@
 package com.viaweb.test;
 
+import android.Manifest;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.design.widget.FloatingActionButton;
+
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -16,15 +27,19 @@ import android.support.v7.widget.Toolbar;
 import android.app.Fragment;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
+
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity
+import edu.itstap.calculator.User;
+
+public class Calculate extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG_1 ="Add food" ;
     private AddFood addFood;
     private FragmentTransaction ft;
     private Fragment searchProduct;
-    private SingIn singIn;
+    public  User user;
 
 
     private class SQLiteConnector extends SQLiteOpenHelper {
@@ -63,18 +78,22 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        user=new User("");
 
         ft=getFragmentManager().beginTransaction();
         searchProduct=new SearchProduct();
         ft.replace(R.id.frameContainer,searchProduct);
         ft.commit();
+        if (android.os.Build.VERSION.SDK_INT > 9) {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        }
 
 
 
@@ -99,6 +118,18 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case 144:
+
+                    break;
+            }
+        }
     }
 
     @Override
@@ -129,7 +160,49 @@ public class MainActivity extends AppCompatActivity
 
             switch (id){
                 case R.id.sing_in:
-                    Toast.makeText(this,"sing in",Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(this,"sing in",Toast.LENGTH_SHORT).show();
+                    AlertDialog.Builder singIn = new AlertDialog.Builder(this);
+                    singIn.setTitle("Sing In");
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view=inflater.inflate(R.layout.sing_in, null,false);
+                    singIn.setView(view);
+                    singIn.setCancelable(false);
+                    singIn.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Dialog f = (Dialog) dialog;
+                            EditText login = f.findViewById(R.id.login);
+                            EditText password = f.findViewById(R.id.password);
+                            String loginString = login.getText().toString();
+                            String passwordString = password.getText().toString();
+                            if (!loginString.isEmpty() && !passwordString.isEmpty()) {
+                                int result = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.INTERNET);
+                                if (result == PackageManager.PERMISSION_GRANTED) {
+//                                    UserClient us = new UserClient("10.0.2.2", 6447);
+
+                                        UserClient us = new UserClient("192.168.31.116", 6447);//c phone sudo ifconfig
+                                        user = us.autorization(loginString, passwordString);
+                                        if (user.isAutorization()) {
+                                            Log.i("User", user.toString());
+                                        }
+
+
+
+                                }
+                            }
+                        }
+                    });
+
+                    singIn.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which)
+                        {
+                            dialog.dismiss();
+                        }
+                    });
+                    AlertDialog ad = singIn.create();
+                    ad.show();
 
 
                     break;
