@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.FragmentTransaction;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,9 +13,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.support.constraint.Group;
 import android.support.design.widget.FloatingActionButton;
 
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +36,9 @@ import android.widget.EditText;
 
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
+import edu.itstap.calculator.Food;
 import edu.itstap.calculator.User;
 
 public class Calculate extends AppCompatActivity
@@ -40,6 +48,15 @@ public class Calculate extends AppCompatActivity
     private FragmentTransaction ft;
     private Fragment searchProduct;
     public  User user;
+    private RecyclerView recResultProduct;
+    private RecyclerView.Adapter mAdapter;
+    private FloatingActionButton fab;
+    private  DrawerLayout drawer;
+    private ActionBarDrawerToggle toggle;
+    private NavigationView navigationView;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private Group aut;
+    ArrayList<Food> foodArrayList;
 
 
     private class SQLiteConnector extends SQLiteOpenHelper {
@@ -82,52 +99,74 @@ public class Calculate extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        user=new User("");
-
         ft=getFragmentManager().beginTransaction();
         searchProduct=new SearchProduct();
         ft.replace(R.id.frameContainer,searchProduct);
         ft.commit();
+
         if (android.os.Build.VERSION.SDK_INT > 9) {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
 
+        fab = findViewById(R.id.fab);
+        fab.setVisibility(View.INVISIBLE);
 
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-              /*  Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();*/
-              addFood=new AddFood();
-              addFood.show(getSupportFragmentManager(),TAG_1);
-
-
+                Snackbar snackbar = Snackbar.make(view, "Add new food", Snackbar.LENGTH_LONG)
+                        .setAction("Add", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                addFood=new AddFood();
+                                addFood.show(getSupportFragmentManager(),TAG_1);
+                            }
+                        });
+                snackbar.setActionTextColor(getResources().getColor(R.color.white));
+                View snackBarView = snackbar.getView();
+                snackBarView.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                snackbar.show();
             }
         });
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        drawer = findViewById(R.id.drawer_layout);
+         toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView =findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+         aut=findViewById(R.id.grAutorisationGroup);
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        recResultProduct= searchProduct.getView().findViewById(R.id.list_products);
+//        recResultProduct.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(this);
+        recResultProduct.setLayoutManager(mLayoutManager);
+        foodArrayList = new ArrayList<>();
+        mAdapter = new RecyclerAdapterSearchProduct(foodArrayList);
+        recResultProduct.setAdapter(mAdapter);
+        navigationView.getMenu().setGroupVisible(R.id.grAutorisationGroup,false);
+//        aut.setVisibility(View.INVISIBLE);
+
+    }
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
+        if (resultCode == 10) {
             switch (requestCode) {
-                case 144:
+                case 1:
+                    Log.e("autorization","autorization");
+                    fab.setVisibility(View.VISIBLE);
+                    navigationView.getMenu().setGroupVisible(R.id.grAutorisationGroup,true);
 
-                    break;
+
+                break;
             }
         }
     }
@@ -151,12 +190,9 @@ public class Calculate extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
 
             switch (id){
                 case R.id.sing_in:
@@ -176,21 +212,32 @@ public class Calculate extends AppCompatActivity
                             String loginString = login.getText().toString();
                             String passwordString = password.getText().toString();
                             if (!loginString.isEmpty() && !passwordString.isEmpty()) {
+                                PendingIntent pi = createPendingResult(1, new Intent(), PendingIntent.FLAG_UPDATE_CURRENT);
+                                Intent intent = new Intent(getBaseContext(), ConnectionWithServer.class)
+                                        .putExtra("login", loginString)
+                                        .putExtra("password", passwordString)
+                                        .putExtra("pi", pi)
+                                        .setAction(ActionsUser.AUTORIZATION)
+                                        .setPackage(getPackageName());
                                 int result = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.INTERNET);
                                 if (result == PackageManager.PERMISSION_GRANTED) {
-//                                    UserClient us = new UserClient("10.0.2.2", 6447);
-
-                                        UserClient us = new UserClient("192.168.31.116", 6447);//c phone sudo ifconfig
-                                        user = us.autorization(loginString, passwordString);
-                                        if (user.isAutorization()) {
-                                            Log.i("User", user.toString());
-                                        }
-
-
-
+                                    getApplicationContext().startService(intent);
+                                    Log.d("startService", "startService");
                                 }
                             }
                         }
+
+
+
+
+
+
+
+
+
+
+//
+
                     });
 
                     singIn.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
@@ -238,4 +285,6 @@ public class Calculate extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
 }

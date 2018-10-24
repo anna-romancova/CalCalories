@@ -14,6 +14,9 @@
     <string name="fat">Fat</string>
     <string name="carbohydrate">Carbohydrate</string>
     <string name="calories">Calories</string>
+    <string name="btnSearch">Search</string>
+    <string name="registration">Registarion</string>
+
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

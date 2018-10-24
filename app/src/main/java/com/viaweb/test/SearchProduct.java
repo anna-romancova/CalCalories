@@ -24,6 +24,9 @@ public class SearchProduct extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
        View v=inflater.inflate(R.layout.fragment_search_product, container, false);
+
+
+
         return v ;
     }
 
