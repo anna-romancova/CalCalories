@@ -18,6 +18,8 @@ import android.support.design.widget.FloatingActionButton;
 
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -32,8 +34,11 @@ import android.support.v7.widget.Toolbar;
 import android.app.Fragment;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.EditText;
 
+import android.widget.TableRow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -42,7 +47,7 @@ import edu.itstap.calculator.Food;
 import edu.itstap.calculator.User;
 
 public class Calculate extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener {
     private static final String TAG_1 ="Add food" ;
     private AddFood addFood;
     private FragmentTransaction ft;
@@ -51,12 +56,16 @@ public class Calculate extends AppCompatActivity
     private RecyclerView recResultProduct;
     private RecyclerView.Adapter mAdapter;
     private FloatingActionButton fab;
-    private  DrawerLayout drawer;
+    private DrawerLayout drawer;
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
+    private Button search;
     private RecyclerView.LayoutManager mLayoutManager;
-    private Group aut;
-    ArrayList<Food> foodArrayList;
+    private EditText searchNameFood;
+    private ArrayList<Food> foodArrayList;
+    private TextView headerTableOfSearch;
+
+
 
 
     private class SQLiteConnector extends SQLiteOpenHelper {
@@ -138,7 +147,17 @@ public class Calculate extends AppCompatActivity
         toggle.syncState();
         navigationView =findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-         aut=findViewById(R.id.grAutorisationGroup);
+        mLayoutManager = new LinearLayoutManager(this);
+
+    }
+    private ArrayList<Food> testFood(){
+        ArrayList<Food> f=new ArrayList<>();
+        f.add(new Food("t",2.5,2.5,2.5,2.5));
+        f.add(new Food("t1",2.5,2.5,2.5,2.5));
+        f.add(new Food("t2",2.5,2.5,2.5,2.5));
+        f.add(new Food("t3",2.5,2.5,2.5,2.5));
+        f.add(new Food("t4",2.5,2.5,2.5,2.5));
+        return f;
     }
 
     @Override
@@ -146,13 +165,74 @@ public class Calculate extends AppCompatActivity
         super.onStart();
         recResultProduct= searchProduct.getView().findViewById(R.id.list_products);
 //        recResultProduct.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(this);
         recResultProduct.setLayoutManager(mLayoutManager);
         foodArrayList = new ArrayList<>();
+        foodArrayList=testFood();
         mAdapter = new RecyclerAdapterSearchProduct(foodArrayList);
+        recResultProduct.setItemAnimator(new DefaultItemAnimator());
+        recResultProduct.addItemDecoration(new MyDividerItemDecoration(this, LinearLayoutManager.VERTICAL, 16));
         recResultProduct.setAdapter(mAdapter);
         navigationView.getMenu().setGroupVisible(R.id.grAutorisationGroup,false);
-//        aut.setVisibility(View.INVISIBLE);
+//      aut.setVisibility(View.INVISIBLE);
+        search=searchProduct.getView().findViewById(R.id.btnsearchProduct);
+        search.setOnClickListener(this);
+        searchNameFood=searchProduct.getView().findViewById(R.id.edSearchProduct);
+        recResultProduct.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recResultProduct, new RecyclerTouchListener.ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                Food food = foodArrayList.get(position);
+                Toast.makeText(getApplicationContext(), food.getName() + " is selected!", Toast.LENGTH_SHORT).show();
+                AlertDialog.Builder addProductToMyList = new AlertDialog.Builder(getApplicationContext());
+                addProductToMyList.setTitle("Add it's to my list");
+                LayoutInflater inflater = getLayoutInflater();
+                View view2=inflater.inflate(R.layout.add_to_my_list, null,false);
+                addProductToMyList.setView(view2);
+                addProductToMyList.setCancelable(false);
+                addProductToMyList.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Dialog f = (Dialog) dialog;
+                        EditText login = f.findViewById(R.id.login);
+                        EditText password = f.findViewById(R.id.password);
+                        String loginString = login.getText().toString();
+                        String passwordString = password.getText().toString();
+                        if (!loginString.isEmpty() && !passwordString.isEmpty()) {
+                            PendingIntent pi = createPendingResult(1, new Intent(), PendingIntent.FLAG_UPDATE_CURRENT);
+                            Intent intent = new Intent(getBaseContext(), ConnectionWithServer.class)
+                                    .putExtra("login", loginString)
+                                    .putExtra("password", passwordString)
+                                    .putExtra("pi", pi)
+                                    .setAction(ActionsUser.ADD_PRODUCT_TO_MY_LIST)
+                                    .setPackage(getPackageName());
+                            int result = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.INTERNET);
+                            if (result == PackageManager.PERMISSION_GRANTED) {
+                                getApplicationContext().startService(intent);
+                                Log.d("startService", "startService");
+                            }
+                        }
+                    }
+                });
+
+                addProductToMyList.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        dialog.dismiss();
+                    }
+                });
+                AlertDialog ad = addProductToMyList.create();
+                ad.show();
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+
+
+            }
+        }));
+
 
     }
     @Override
@@ -162,18 +242,29 @@ public class Calculate extends AppCompatActivity
             switch (requestCode) {
                 case 1:
                     Log.e("autorization","autorization");
+                    setUser(((User) data.getSerializableExtra("user")));
                     fab.setVisibility(View.VISIBLE);
                     navigationView.getMenu().setGroupVisible(R.id.grAutorisationGroup,true);
-
+                    invalidateOptionsMenu();
 
                 break;
+                case 2:
+                    setUser(((User) data.getSerializableExtra("user")));
+                    Log.e("searchFood",user.toString());
+                    foodArrayList.clear();
+                    foodArrayList=user.getSearchFood();
+                    mAdapter = new RecyclerAdapterSearchProduct(foodArrayList);
+                    mAdapter.notifyDataSetChanged();
+                    recResultProduct.setAdapter(mAdapter);
+                    mAdapter.notifyDataSetChanged();
+                    break;
             }
         }
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer =findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -183,17 +274,58 @@ public class Calculate extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+
+
         return true;
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem singIn = menu.findItem(R.id.sing_in);
+        MenuItem singOut = menu.findItem(R.id.sing_out);
+        MenuItem registr = menu.findItem(R.id.registarion);
+
+        if(user!=null && user.isAutorization())
+        {
+            singOut.setVisible(true);
+            singIn.setVisible(false);
+            registr.setVisible(false);
+        }
+        else
+        {
+            singIn.setVisible(true);
+            registr.setVisible(true);
+            singOut.setVisible(false);
+        }
+        return true;
+
+    }
+
+/*    @Override
+    public boolean onPrepareOptionsMenu(Menu menu)
+    {
+        MenuItem singIn = menu.findItem(R.id.sing_in);
+        MenuItem singOut = menu.findItem(R.id.sing_out);
+        MenuItem registr = menu.findItem(R.id.registarion);
+        if(user!=null && user.isAutorization())
+        {
+            singOut.setVisible(true);
+            singIn.setVisible(false);
+            registr.setVisible(false);
+        }
+        else
+        {
+            singIn.setVisible(true);
+            registr.setVisible(true);
+            singOut.setVisible(false);
+        }
+        return true;
+    }*/
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         int id = item.getItemId();
-
-
             switch (id){
                 case R.id.sing_in:
 //                    Toast.makeText(this,"sing in",Toast.LENGTH_SHORT).show();
@@ -286,5 +418,42 @@ public class Calculate extends AppCompatActivity
         return true;
     }
 
+    public void setUser(User user) {
+        this.user = user;
+    }
 
+    public User getUser() {
+        return user;
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.btnsearchProduct:
+                String searchNameFoodString=searchNameFood.getText().toString();
+                Log.d("nameFood",searchNameFoodString);
+
+                if(!searchNameFoodString.isEmpty()) {
+
+                    if(getUser()==null){
+                        user=new User("");
+                    }
+                    PendingIntent pi = createPendingResult(2, new Intent(), PendingIntent.FLAG_UPDATE_CURRENT);
+                    Intent intent = new Intent(getBaseContext(), ConnectionWithServer.class)
+                            .putExtra("nameProduct",searchNameFoodString )
+                            .putExtra("user",getUser())
+                            .putExtra("pi", pi)
+                            .setAction(ActionsUser.SEARCH)
+                            .setPackage(getPackageName());
+                    int result = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.INTERNET);
+                    if (result == PackageManager.PERMISSION_GRANTED) {
+                        getApplicationContext().startService(intent);
+                        Log.d("startService", "startService");
+                    }
+                }
+
+                break;
+        }
+
+    }
 }

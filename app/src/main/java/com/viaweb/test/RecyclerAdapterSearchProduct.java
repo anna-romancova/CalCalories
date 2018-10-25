@@ -6,13 +6,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import edu.itstap.calculator.Food;
 
 public class RecyclerAdapterSearchProduct extends RecyclerView.Adapter<RecyclerAdapterSearchProduct.MyViewHolder> {
 
-    private List<Food> foodList;
+    private ArrayList<Food> foodList;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView name, protein, fats, carbohydrate, calories;
@@ -29,16 +29,18 @@ public class RecyclerAdapterSearchProduct extends RecyclerView.Adapter<RecyclerA
     }
 
 
-    public RecyclerAdapterSearchProduct(List<Food> foodList) {
+    public RecyclerAdapterSearchProduct(ArrayList<Food> foodList) {
         this.foodList = foodList;
     }
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
+        // create a new view
+        View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.result_search_product, parent, false);
-
-        return new MyViewHolder(itemView);
+        // set the view's size, margins, paddings and layout parameters
+        MyViewHolder vh = new MyViewHolder(v);
+        return vh;
     }
 
     @Override

@@ -13,4 +13,6 @@ public class ActionsUser {
 
     public static final String GET_HISTORY = "Get history";
 
+    public static final String ADD_PRODUCT_TO_MY_LIST = "Add to my list";
+
 }

@@ -4,22 +4,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SearchProduct">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/activity_horizontal_margin"
-        android:orientation="vertical"
-        >
+        android:layout_margin="8dp"
+        android:orientation="vertical">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:layout_weight="0.8">
+            android:layout_weight="0.8"
+            android:orientation="horizontal">
 
             <EditText
                 android:id="@+id/edSearchProduct"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:focusable="true"
                 android:maxHeight="72dp"
                 android:minWidth="260dp" />
@@ -34,78 +35,23 @@
                 android:text="@string/btnSearch" />
 
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:layout_weight="0.2">
+            android:layout_weight="0.2"
+            android:orientation="horizontal">
 
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/list_products"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="vertical" />
 
-
-<TableLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
-    <TableRow android:layout_width="match_parent"
-        android:visibility="invisible">
-
-        <TextView
-            android:id="@+id/tvFoodNm"
-            style="@style/MyTextViewStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/name"
-            android:textAlignment="center"
-            android:textColor="@color/title" />
-
-        <TextView
-            android:id="@+id/tvProteinNm"
-            style="@style/MyTextViewStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/protein" />
-
-        <TextView
-            android:id="@+id/tvFatNm"
-            style="@style/MyTextViewStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/fat" />
-
-        <TextView
-            android:id="@+id/tvCargohNm"
-            style="@style/MyTextViewStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/carbohydrate" />
-
-        <TextView
-            android:id="@+id/tvCaloriesNm"
-            style="@style/MyTextViewStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/calories" />
-
-        <TextView
-            android:id="@+id/tvNm"
-            style="@style/MyTextViewStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/add" />
-
-
-    </TableRow>
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/list_products"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-</TableLayout>
 
         </LinearLayout>
 
     </LinearLayout>
-
 
 
 </FrameLayout>

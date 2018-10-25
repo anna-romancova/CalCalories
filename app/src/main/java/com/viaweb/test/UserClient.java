@@ -139,9 +139,10 @@ public class UserClient {
 
         return add;
     }
-    public User searchFood(String nameFood) {
+    public User searchFood(String nameFood,User us) {
 
         Food searchFood =new Food(nameFood, 0.0, 0.0, 0.0, 0.0);
+        this.setUser(us);
         searchFood.setSearch(true);
         this.getUser().getSearchFood().add(searchFood);
 
@@ -164,7 +165,7 @@ public class UserClient {
 
             e.printStackTrace();
         }
-        return this.getUser();
+        return user;
     }
 
 

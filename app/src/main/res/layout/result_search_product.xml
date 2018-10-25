@@ -1,65 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?android:attr/selectableItemBackground"
     android:clickable="true"
-    android:focusable="true"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/row_padding_vertical"
     android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/row_padding_vertical"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/row_padding_vertical">
-
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:id="@+id/tvNameFood"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/MyTextViewStyle"
-            android:text="text"
-            android:textColor="@color/title" />
-
-        <TextView
-            android:id="@+id/tvProtein"
-            style="@style/MyTextViewStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="text" />
-
-        <TextView
-            android:id="@+id/tvFat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/MyTextViewStyle"
-            android:text="text"
-            android:textColor="@color/colorPrimary" />
-
-        <TextView
-            android:id="@+id/tvCargoh"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/MyTextViewStyle"
-            android:text="text"
-            android:textColor="@color/colorPrimary" />
-
-        <TextView
-            android:id="@+id/tvCalories"
-            android:layout_width="wrap_content"
-            style="@style/MyTextViewStyle"
-            android:layout_height="wrap_content"
-            android:text="text"
-            android:textColor="@color/colorPrimary" />
-
-        <Button
-            android:id="@+id/button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/add" />
-    </TableRow>
+    android:paddingBottom="@dimen/row_padding_vertical">
 
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/tvSerchName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/name"
+        android:textColor="@color/colorPrimaryDark" />
+
+    <TextView
+        android:id="@+id/tvNameFood"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/tvSerchName"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="89dp"
+        android:layout_marginTop="1dp"
+        android:text="text" />
+
+
+    <TextView
+        android:id="@+id/tvSerchProt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvNameFood"
+        android:layout_alignStart="@+id/tvSerchName"
+        android:text="Proteine:"
+        android:textColor="@color/colorPrimaryDark" />
+
+    <TextView
+        android:id="@+id/tvProtein"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvNameFood"
+        android:layout_alignStart="@+id/tvNameFood"
+        android:text="text" />
+
+
+    <TextView
+        android:id="@+id/tvSerchFats"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/tvSerchName"
+        android:layout_alignTop="@+id/tvNameFood"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="44dp"
+        android:text="Fats:"
+        android:textColor="@color/colorPrimaryDark" />
+
+    <TextView
+        android:id="@+id/tvFat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/tvNameFood"
+        android:layout_alignTop="@+id/tvNameFood"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="45dp"
+        android:text="text" />
+
+
+    <TextView
+        android:id="@+id/tvSerchCarb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvSerchName"
+        android:layout_alignStart="@+id/tvSerchCalories"
+        android:layout_marginTop="0dp"
+        android:text="Carbohydrate:"
+        android:textColor="@color/colorPrimaryDark" />
+
+    <TextView
+        android:id="@+id/tvCargoh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvSerchName"
+        android:layout_alignStart="@+id/tvCalories"
+        android:text="text" />
+
+    <TextView
+        android:id="@+id/tvSerchCalories"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/tvFat"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="144dp"
+        android:text="Calories:"
+        android:textColor="@color/colorPrimaryDark" />
+
+    <TextView
+        android:id="@+id/tvCalories"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/tvFat"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="73dp"
+        android:text="text" />
+
+
+</RelativeLayout>
