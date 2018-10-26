@@ -15,8 +15,8 @@
         android:id="@+id/tvSerchName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/name"
-        android:textColor="@color/colorPrimaryDark" />
+        android:text="@string/nameTitle"
+        android:textColor="@color/black" />
 
     <TextView
         android:id="@+id/tvNameFood"
@@ -36,8 +36,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvNameFood"
         android:layout_alignStart="@+id/tvSerchName"
-        android:text="Proteine:"
-        android:textColor="@color/colorPrimaryDark" />
+        android:text="@string/proteinTitle"
+        android:textColor="@color/black" />
 
     <TextView
         android:id="@+id/tvProtein"
@@ -56,8 +56,8 @@
         android:layout_alignTop="@+id/tvNameFood"
         android:layout_marginStart="4dp"
         android:layout_marginTop="44dp"
-        android:text="Fats:"
-        android:textColor="@color/colorPrimaryDark" />
+        android:text="@string/fatTitle"
+        android:textColor="@color/black" />
 
     <TextView
         android:id="@+id/tvFat"
@@ -76,9 +76,10 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvSerchName"
         android:layout_alignStart="@+id/tvSerchCalories"
-        android:layout_marginTop="0dp"
-        android:text="Carbohydrate:"
-        android:textColor="@color/colorPrimaryDark" />
+        android:layout_marginStart="-1dp"
+        android:layout_marginTop="3dp"
+        android:text="@string/carbohydrateTitle"
+        android:textColor="@color/black" />
 
     <TextView
         android:id="@+id/tvCargoh"
@@ -86,6 +87,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvSerchName"
         android:layout_alignStart="@+id/tvCalories"
+        android:layout_marginStart="-1dp"
+        android:layout_marginTop="7dp"
         android:text="text" />
 
     <TextView
@@ -94,9 +97,10 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/tvFat"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="144dp"
-        android:text="Calories:"
-        android:textColor="@color/colorPrimaryDark" />
+        android:layout_marginTop="-1dp"
+        android:layout_marginEnd="126dp"
+        android:text="@string/caloriesTitle"
+        android:textColor="@color/black" />
 
     <TextView
         android:id="@+id/tvCalories"
@@ -104,7 +108,8 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/tvFat"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="73dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginEnd="35dp"
         android:text="text" />
 
 

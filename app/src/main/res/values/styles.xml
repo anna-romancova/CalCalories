@@ -6,6 +6,10 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:buttonStyle">@style/CaloriesButtons</item>
+        <item name="android:alertDialogStyle">@style/dialogAlertStyle</item>
+        <item name="android:alertDialogTheme">@style/dialogAlertTheme</item>
+        <item name="android:textViewStyle">@style/MyTextViewStyle</item>
     </style>
 
 
@@ -25,8 +29,26 @@
     <style name="CaloriesButtons" parent="android:Widget.Button">
         <item name="android:textColor">@color/white</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:layout_width">wrap_content</item>
         <item name="android:background">@color/colorPrimary</item>
-        <item name="android:padding">15dp</item>
+        <item name="android:padding">3dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:paddingLeft">10dp</item>
+    </style>
+    <style name="dialogAlertStyle" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="android:buttonBarButtonStyle">@style/CaloriesButtons</item>
+        <item name="android:titleTextStyle">@style/MyTitleStyle</item>
+    </style>
+    <style name="MyTitleStyle" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/title</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_margin">5dp</item>
+        <item name="android:textSize">25dp</item>
+    </style>
+
+    <style name="dialogAlertTheme" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="android:buttonBarButtonStyle">@style/CaloriesButtons</item>
+        <item name="android:titleTextStyle">@style/MyTitleStyle</item>
     </style>
 
 </resources>

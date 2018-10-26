@@ -15,33 +15,41 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_weight="0.85"
             android:focusableInTouchMode="true"
-            android:layout_weight="0.8"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingBottom="0dp">
 
             <EditText
                 android:id="@+id/edSearchProduct"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="0.1"
                 android:focusable="true"
+                android:hint="@string/btnSearch"
                 android:maxHeight="72dp"
                 android:minWidth="260dp" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/btnsearchProduct"
                 style="@style/CaloriesButtons"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="3dp"
                 android:layout_marginLeft="5dp"
-                android:text="@string/btnSearch" />
+                android:layout_weight="0.9"
+                android:src="@drawable/search"
+                android:text="@string/btnSearch"
+                tools:src="@drawable/search" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="0.2"
+            android:layout_weight="0.15"
             android:orientation="horizontal">
 
             <android.support.v7.widget.RecyclerView

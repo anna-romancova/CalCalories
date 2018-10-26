@@ -37,6 +37,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -60,12 +61,11 @@ public class Calculate extends AppCompatActivity
     private DrawerLayout drawer;
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
-    private Button search;
+    private ImageButton search;
     private RecyclerView.LayoutManager mLayoutManager;
     private EditText searchNameFood;
     private ArrayList<Food> foodArrayList;
     private LinearLayout parentrSearch;
-    private TextView headerTableOfSearch;
 
 
 
@@ -136,6 +136,7 @@ public class Calculate extends AppCompatActivity
                                 addFood.show(getSupportFragmentManager(),TAG_1);
                             }
                         });
+
                 snackbar.setActionTextColor(getResources().getColor(R.color.white));
                 View snackBarView = snackbar.getView();
                 snackBarView.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
@@ -185,7 +186,7 @@ public class Calculate extends AppCompatActivity
             public void onClick(View view, int position) {
                 Food food = foodArrayList.get(position);
                 Toast.makeText(getApplicationContext(), food.getName() + " is selected!", Toast.LENGTH_SHORT).show();
-                AlertDialog.Builder addProductToMyList = new AlertDialog.Builder(getApplicationContext());
+                AlertDialog.Builder addProductToMyList = new AlertDialog.Builder(view.getContext());
                 addProductToMyList.setTitle("Add it's to my list");
                 LayoutInflater inflater = getLayoutInflater();
                 View view2=inflater.inflate(R.layout.add_to_my_list, null,false);
@@ -194,25 +195,7 @@ public class Calculate extends AppCompatActivity
                 addProductToMyList.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Dialog f = (Dialog) dialog;
-                        EditText login = f.findViewById(R.id.login);
-                        EditText password = f.findViewById(R.id.password);
-                        String loginString = login.getText().toString();
-                        String passwordString = password.getText().toString();
-                        if (!loginString.isEmpty() && !passwordString.isEmpty()) {
-                            PendingIntent pi = createPendingResult(1, new Intent(), PendingIntent.FLAG_UPDATE_CURRENT);
-                            Intent intent = new Intent(getBaseContext(), ConnectionWithServer.class)
-                                    .putExtra("login", loginString)
-                                    .putExtra("password", passwordString)
-                                    .putExtra("pi", pi)
-                                    .setAction(ActionsUser.ADD_PRODUCT_TO_MY_LIST)
-                                    .setPackage(getPackageName());
-                            int result = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.INTERNET);
-                            if (result == PackageManager.PERMISSION_GRANTED) {
-                                getApplicationContext().startService(intent);
-                                Log.d("startService", "startService");
-                            }
-                        }
+//                        Toast.makeText(getApplicationContext(),String.valueOf(food.getName()),Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -279,8 +262,7 @@ public class Calculate extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
-
-
+        getMenuInflater().inflate(R.menu.menu_main,menu);
         return true;
     }
 
@@ -391,6 +373,12 @@ public class Calculate extends AppCompatActivity
                     break;
                 case R.id.sing_out:
                     Toast.makeText(this,"sing out",Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.registarion:
+                    Toast.makeText(this,"registarion",Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.list_products_item:
+                    Toast.makeText(this,"list_products_item",Toast.LENGTH_SHORT).show();
                     break;
             }
 

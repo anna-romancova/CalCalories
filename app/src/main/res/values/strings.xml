@@ -17,6 +17,11 @@
     <string name="btnSearch">Search</string>
     <string name="registration">Registarion</string>
     <string name="weight">weight</string>
+    <string name="nameTitle">Name: </string>
+    <string name="proteinTitle">Protein: </string>
+    <string name="fatTitle">Fat: </string>
+    <string name="carbohydrateTitle">Carbohydrate: </string>
+    <string name="caloriesTitle">Calories: </string>
 
 
     <!-- TODO: Remove or change this placeholder text -->
