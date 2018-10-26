@@ -37,6 +37,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 
+import android.widget.LinearLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -63,6 +64,7 @@ public class Calculate extends AppCompatActivity
     private RecyclerView.LayoutManager mLayoutManager;
     private EditText searchNameFood;
     private ArrayList<Food> foodArrayList;
+    private LinearLayout parentrSearch;
     private TextView headerTableOfSearch;
 
 
@@ -175,6 +177,7 @@ public class Calculate extends AppCompatActivity
         navigationView.getMenu().setGroupVisible(R.id.grAutorisationGroup,false);
 //      aut.setVisibility(View.INVISIBLE);
         search=searchProduct.getView().findViewById(R.id.btnsearchProduct);
+        parentrSearch=searchProduct.getView().findViewById(R.id.parentrSearch);
         search.setOnClickListener(this);
         searchNameFood=searchProduct.getView().findViewById(R.id.edSearchProduct);
         recResultProduct.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recResultProduct, new RecyclerTouchListener.ClickListener() {
@@ -232,6 +235,7 @@ public class Calculate extends AppCompatActivity
 
             }
         }));
+
 
 
     }
@@ -451,6 +455,7 @@ public class Calculate extends AppCompatActivity
                         Log.d("startService", "startService");
                     }
                 }
+                parentrSearch.requestFocus();
 
                 break;
         }
