@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -51,16 +52,15 @@ import edu.itstap.calculator.User;
 
 public class Calculate extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
-    private static final String TAG = "Calculate";
+    public static final String TAG = "Calculate";
     private AddFood addFood;
     private FragmentTransaction ft;
     private SearchProduct searchProduct;
     private ListOfDietProduct tableListProduct;
     public  static User user;
     private EditText edWeight;
-    private Food foodOfList;
-    private Double weightFoOneProduct;
-    private TextView tvData;
+
+
     private RecyclerView recResultProduct;
     private RecyclerView.Adapter mAdapter;
     private FloatingActionButton fab;
@@ -113,6 +113,7 @@ public class Calculate extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         FragmentTransaction ft= getSupportFragmentManager().beginTransaction();
@@ -159,7 +160,7 @@ public class Calculate extends AppCompatActivity
 
     }
 
-    private ArrayList<Food> testFood() {
+    public ArrayList<Food> testFood() {
         ArrayList<Food> f = new ArrayList<>();
         f.add(new Food("t", 2.5, 2.5, 2.5, 2.5));
         f.add(new Food("t1", 2.5, 2.5, 2.5, 2.5));
@@ -172,76 +173,15 @@ public class Calculate extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
-        recResultProduct = searchProduct.getView().findViewById(R.id.list_products);
-//        recResultProduct.setHasFixedSize(true);
-        recResultProduct.setLayoutManager(mLayoutManager);
-        foodArrayList = new ArrayList<>();
-        foodArrayList = testFood();
-        mAdapter = new RecyclerAdapterSearchProduct(foodArrayList);
-        recResultProduct.setItemAnimator(new DefaultItemAnimator());
-        recResultProduct.addItemDecoration(new MyDividerItemDecoration(this, LinearLayoutManager.VERTICAL, 16));
-        recResultProduct.setAdapter(mAdapter);
         navigationView.getMenu().setGroupVisible(R.id.grAutorisationGroup, false);
+
+
+//        recResultProduct.setHasFixedSize(true);
 //      aut.setVisibility(View.INVISIBLE);
 //        search = searchProduct.getView().findViewById(R.id.btnsearchProduct);
-        parentrSearch = searchProduct.getView().findViewById(R.id.parentrSearch);
-//        search.setOnClickListener(this);
-        searchNameFood = searchProduct.getView().findViewById(R.id.edSearchProduct);
-        recResultProduct.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recResultProduct, new RecyclerTouchListener.ClickListener() {
-            @Override
-            public void onClick(View view, int position) {
-                foodOfList = foodArrayList.get(position);
-                if (getUser() == null) {
-                    setUser(new User(""));
-                }
-//                Toast.makeText(getApplicationContext(), food.getName() + " is selected!", Toast.LENGTH_SHORT).show();
-                AlertDialog.Builder addProductToMyList = new AlertDialog.Builder(view.getContext());
-                addProductToMyList.setTitle("Add it's to my list");
-                LayoutInflater inflater = getLayoutInflater();
-                View view2 = inflater.inflate(R.layout.add_to_my_list, null, false);
-                tvData = view2.findViewById(R.id.dataOfProduct);
-                tvData.setText("Name:" + foodOfList.getName() + ", proteine:" + foodOfList.getProtein() + ", fats:" + foodOfList.getFats() + ", carbohydrates:" +
-                        foodOfList.getCarbohydrate() + ", calores: " + foodOfList.getCalories());
-                edWeight = view2.findViewById(R.id.edWeight);
-                addProductToMyList.setView(view2);
-                addProductToMyList.setCancelable(false);
-                addProductToMyList.setPositiveButton("Add", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    weightFoOneProduct = Double.valueOf(edWeight.getText().toString());
-                        if(!weightFoOneProduct.isNaN()) {
-                            getUser().getFoods().add(calculateOneProduct(foodOfList, weightFoOneProduct));
-                            Log.d(TAG,user.toString());
-                            invalidateOptionsMenu();
-
-                        }
-
-
-                    }
-                });
-
-                addProductToMyList.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-                AlertDialog ad = addProductToMyList.create();
-                ad.show();
-            }
-
-            @Override
-            public void onLongClick(View view, int position) {
-
-
-            }
-        }));
-
-
     }
 
-    private Food calculateOneProduct(Food food, Double d) {
+    public Food calculateOneProduct(Food food, Double d) {
         Double resultProt = food.getProtein() * d;
         Double resultFats = food.getFats() * d;
         Double resultCarb = food.getCarbohydrate() * d;
@@ -265,13 +205,17 @@ public class Calculate extends AppCompatActivity
                     break;
                 case 2:
                     setUser(((User) data.getSerializableExtra("user")));
-                    Log.e("searchFood", user.toString());
-                    foodArrayList.clear();
+
+                    Fragment f = getSupportFragmentManager().findFragmentById(R.id.frameContainer);
+                    SearchProduct fragment = (SearchProduct)f;
+                    fragment.updateViews();
+                    //Log.e("searchFood", user.toString());
+              /*      foodArrayList.clear();
                     foodArrayList = user.getSearchFood();
                     mAdapter = new RecyclerAdapterSearchProduct(foodArrayList);
                     mAdapter.notifyDataSetChanged();
                     recResultProduct.setAdapter(mAdapter);
-                    mAdapter.notifyDataSetChanged();
+                    mAdapter.notifyDataSetChanged();*/
                     break;
             }
         }
@@ -474,8 +418,7 @@ public class Calculate extends AppCompatActivity
 
     }
 
-    public void searchProduct (View view) {
-        String searchNameFoodString = searchNameFood.getText().toString();
+    public void searchProduct (String searchNameFoodString) {
         Log.d("nameFood", searchNameFoodString);
 
         if (!searchNameFoodString.isEmpty()) {
@@ -496,6 +439,6 @@ public class Calculate extends AppCompatActivity
                 Log.d("startService", "startService");
             }
         }
-        parentrSearch.requestFocus();
+
     }
 }
