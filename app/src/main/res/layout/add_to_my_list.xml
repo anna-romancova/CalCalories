@@ -2,30 +2,42 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="15dp"
     android:orientation="vertical">
-
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="0.5"
-        android:orientation="horizontal">
+        android:layout_weight="0.7"
+        android:orientation="vertical">
 
         <TextView
+            android:id="@+id/dataOfProduct"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            />
+            android:text="Text"
+            android:textAlignment="center" />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="0.5"
-        android:orientation="horizontal">
+        android:layout_weight="0.3"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/nav_header_vertical_spacing"
+        android:paddingRight="@dimen/nav_header_vertical_spacing">
+
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/weight"/>
+            android:text="100=100g 1000=1kg" />
+
+        <EditText
+            android:id="@+id/edWeight"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/weight" />
     </LinearLayout>
 </LinearLayout>
