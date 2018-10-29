@@ -11,19 +11,15 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.support.constraint.Group;
 import android.support.design.widget.FloatingActionButton;
 
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,14 +32,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.EditText;
 
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import com.viaweb.test.Fragments.CalculateOfReqired;
+import com.viaweb.test.Fragments.ListOfDietProduct;
+import com.viaweb.test.Fragments.Profile;
+import com.viaweb.test.Fragments.SearchProduct;
+import com.viaweb.test.Services.ConnectionWithServer;
+import com.viaweb.test.libClasses.ActionsUser;
 
 import java.util.ArrayList;
 
@@ -53,11 +53,19 @@ import edu.itstap.calculator.User;
 public class Calculate extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
     public static final String TAG = "Calculate";
-    private AddFood addFood;
     private FragmentTransaction ft;
     private SearchProduct searchProduct;
     private ListOfDietProduct tableListProduct;
     public  static User user;
+    private  String loginString;
+    private String passwordString;
+
+
+    private EditText nameFoodAdd ;
+    private EditText protFoodAdd ;
+    private EditText fatsFoodAdd ;
+    private EditText carbFoodAdd ;
+    private EditText calorsFoodAdd;
     private EditText edWeight;
 
 
@@ -127,10 +135,8 @@ public class Calculate extends AppCompatActivity
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
-
         fab = findViewById(R.id.fab);
         fab.setVisibility(View.INVISIBLE);
-
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -138,8 +144,41 @@ public class Calculate extends AppCompatActivity
                         .setAction("Add", new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                addFood = new AddFood();
-                                addFood.show(getSupportFragmentManager(), TAG);
+                                AlertDialog.Builder addFood = new AlertDialog.Builder(getApplicationContext());
+                                addFood.setTitle("Add food!");
+                                LayoutInflater inflater = getLayoutInflater();
+                                View vAddFood = inflater.inflate(R.layout.add_food, null, false);
+                                addFood.setView(vAddFood);
+                                addFood.setCancelable(false);
+                                addFood.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Dialog f = (Dialog) dialog;
+                                         nameFoodAdd = f.findViewById(R.id.edNameFood);
+                                         protFoodAdd = f.findViewById(R.id.edProtein);
+                                         fatsFoodAdd = f.findViewById(R.id.edFat);
+                                         carbFoodAdd = f.findViewById(R.id.edCarbohydrate);
+                                         calorsFoodAdd = f.findViewById(R.id.edCalories);
+                                        if (!nameFoodAdd.getText().toString().isEmpty() && !protFoodAdd.getText().toString().isEmpty()
+                                                &&!fatsFoodAdd.getText().toString().isEmpty()
+                                                &&!carbFoodAdd.getText().toString().isEmpty()
+                                                &&!carbFoodAdd.getText().toString().isEmpty()) {
+                                            AddFoodsynkTask addFood=new AddFoodsynkTask();
+                                            addFood.execute();
+                                        }
+                                    }
+                                });
+
+                                addFood.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                                AlertDialog adF = addFood.create();
+                                adF.show();
+
                             }
                         });
 
@@ -156,8 +195,6 @@ public class Calculate extends AppCompatActivity
         toggle.syncState();
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-
     }
 
     public ArrayList<Food> testFood() {
@@ -182,10 +219,15 @@ public class Calculate extends AppCompatActivity
     }
 
     public Food calculateOneProduct(Food food, Double d) {
-        Double resultProt = food.getProtein() * d;
-        Double resultFats = food.getFats() * d;
-        Double resultCarb = food.getCarbohydrate() * d;
-        Double resultCalor = food.getCalories() * d;
+        d=Math.floor(d*100)/100.0;
+        Double resultProt = (food.getProtein()* 0.01) * d;
+        resultProt=Math.floor(resultProt*100)/100.0;
+        Double resultFats = (food.getFats()* 0.01) * d;
+        resultFats=Math.floor(resultFats*100)/100.0;
+        Double resultCarb = (food.getCarbohydrate()* 0.01) * d;
+        resultCarb=Math.floor(resultCarb*100)/100.0;
+        Double resultCalor = (food.getCalories()* 0.01) * d;
+        resultCalor=Math.floor(resultCalor*100)/100.0;
         return new Food(food.getName(), resultCalor, resultProt, resultFats, resultCarb);
 
     }
@@ -196,11 +238,13 @@ public class Calculate extends AppCompatActivity
         if (resultCode == 10) {
             switch (requestCode) {
                 case 1:
-                    Log.e("autorization", "autorization");
+
                     setUser(((User) data.getSerializableExtra("user")));
+                    Log.e("autorization aftre user", getUser().toString());
                     fab.setVisibility(View.VISIBLE);
                     navigationView.getMenu().setGroupVisible(R.id.grAutorisationGroup, true);
                     invalidateOptionsMenu();
+                    stopService(new Intent(getBaseContext(),ConnectionWithServer.class));
 
                     break;
                 case 2:
@@ -209,13 +253,7 @@ public class Calculate extends AppCompatActivity
                     Fragment f = getSupportFragmentManager().findFragmentById(R.id.frameContainer);
                     SearchProduct fragment = (SearchProduct)f;
                     fragment.updateViews();
-                    //Log.e("searchFood", user.toString());
-              /*      foodArrayList.clear();
-                    foodArrayList = user.getSearchFood();
-                    mAdapter = new RecyclerAdapterSearchProduct(foodArrayList);
-                    mAdapter.notifyDataSetChanged();
-                    recResultProduct.setAdapter(mAdapter);
-                    mAdapter.notifyDataSetChanged();*/
+                    stopService(new Intent(getBaseContext(),ConnectionWithServer.class));
                     break;
             }
         }
@@ -257,7 +295,7 @@ public class Calculate extends AppCompatActivity
 
         if(getUser()==null){
             listProduct.setVisible(false);
-        }else if(getUser()!=null&&!getUser().getFoods().isEmpty()){
+        }else if(getUser()!=null&&!getUser().getHistoryFoods().isEmpty()){
             listProduct.setVisible(true);
         }
         return true;
@@ -303,21 +341,13 @@ public class Calculate extends AppCompatActivity
                         Dialog f = (Dialog) dialog;
                         EditText login = f.findViewById(R.id.login);
                         EditText password = f.findViewById(R.id.password);
-                        String loginString = login.getText().toString();
-                        String passwordString = password.getText().toString();
+                        loginString = login.getText().toString();
+                        passwordString = password.getText().toString();
                         if (!loginString.isEmpty() && !passwordString.isEmpty()) {
-                            PendingIntent pi = createPendingResult(1, new Intent(), PendingIntent.FLAG_UPDATE_CURRENT);
-                            Intent intent = new Intent(getBaseContext(), ConnectionWithServer.class)
-                                    .putExtra("login", loginString)
-                                    .putExtra("password", passwordString)
-                                    .putExtra("pi", pi)
-                                    .setAction(ActionsUser.AUTORIZATION)
-                                    .setPackage(getPackageName());
-                            int result = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.INTERNET);
-                            if (result == PackageManager.PERMISSION_GRANTED) {
-                                getApplicationContext().startService(intent);
-                                Log.d("startService", "startService");
-                            }
+                            AutorizationAsynkTask aut=new AutorizationAsynkTask();
+                           aut.execute();
+
+
                         }
                     }
 
@@ -343,8 +373,47 @@ public class Calculate extends AppCompatActivity
                 break;
             case R.id.registarion:
                 Toast.makeText(this, "registarion", Toast.LENGTH_SHORT).show();
+
+                AlertDialog.Builder registarion = new AlertDialog.Builder(this);
+                registarion.setTitle("Registarion");
+                LayoutInflater inf = getLayoutInflater();
+                View v = inf.inflate(R.layout.registration_user, null, false);
+                registarion.setView(v);
+                registarion.setCancelable(false);
+                registarion.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Dialog f = (Dialog) dialog;
+                        EditText login = f.findViewById(R.id.login);
+                        EditText password = f.findViewById(R.id.password);
+                        loginString = login.getText().toString();
+                        passwordString = password.getText().toString();
+                        if (!loginString.isEmpty() && !passwordString.isEmpty()) {
+                            AutorizationAsynkTask aut=new AutorizationAsynkTask();
+                            aut.execute();
+
+
+                        }
+                    }
+
+
+//
+
+                });
+
+                registarion.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                AlertDialog registr = registarion.create();
+                registr.show();
+
                 break;
             case R.id.list_products_item:
+
                 getSupportFragmentManager().beginTransaction().replace(R.id.frameContainer,new ListOfDietProduct()).commit();
 
                 break;
@@ -360,7 +429,10 @@ public class Calculate extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_profile) {
-            // Handle the camera action
+            FragmentTransaction  ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.frameContainer, new Profile());
+            ft.commit();
+
         } else if (id == R.id.nav_generate) {
 //            onRestart();
              FragmentTransaction  ft = getSupportFragmentManager().beginTransaction();
@@ -370,6 +442,11 @@ public class Calculate extends AppCompatActivity
         } else if (id == R.id.nav_history) {
 
         } else if (id == R.id.nav_calculate) {
+
+            FragmentTransaction  ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.frameContainer, new CalculateOfReqired());
+            ft.commit();
+
 
         }
 
@@ -426,6 +503,7 @@ public class Calculate extends AppCompatActivity
             if (getUser() == null) {
                 user = new User("");
             }
+
             PendingIntent pi = createPendingResult(2, new Intent(), PendingIntent.FLAG_UPDATE_CURRENT);
             Intent intent = new Intent(getBaseContext(), ConnectionWithServer.class)
                     .putExtra("nameProduct", searchNameFoodString)
@@ -439,6 +517,58 @@ public class Calculate extends AppCompatActivity
                 Log.d("startService", "startService");
             }
         }
+
+    }
+    class  AutorizationAsynkTask extends AsyncTask<Void,Void,Void>{
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            PendingIntent pi = createPendingResult(1, new Intent(), PendingIntent.FLAG_UPDATE_CURRENT);
+            Intent intent = new Intent(getBaseContext(), ConnectionWithServer.class)
+                    .putExtra("login", loginString)
+                    .putExtra("password", passwordString)
+                    .putExtra("pi", pi)
+                    .setAction(ActionsUser.AUTORIZATION)
+                    .setPackage(getPackageName());
+            int result = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.INTERNET);
+            if (result == PackageManager.PERMISSION_GRANTED) {
+                getApplicationContext().startService(intent);
+                Log.d("startService", "startService");
+            }
+
+            return null;
+        }
+
+
+
+
+    }
+    class  AddFoodsynkTask extends AsyncTask<Void,Void,Void>{
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            PendingIntent pi = createPendingResult(3, new Intent(), PendingIntent.FLAG_UPDATE_CURRENT);
+            Intent intent = new Intent(getBaseContext(), ConnectionWithServer.class)
+                    .putExtra("name", nameFoodAdd.getText().toString())
+                    .putExtra("proteine", protFoodAdd.getText().toString())
+                    .putExtra("fats", fatsFoodAdd.getText().toString())
+                    .putExtra("carbohydrate", carbFoodAdd.getText().toString())
+                    .putExtra("calors", calorsFoodAdd.getText().toString())
+                    .putExtra("pi", pi)
+                    .setAction(ActionsUser.ADD_FOOD)
+                    .setPackage(getPackageName());
+            int result = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.INTERNET);
+            if (result == PackageManager.PERMISSION_GRANTED) {
+                getApplicationContext().startService(intent);
+                Log.d("startService", "startService Add food");
+            }
+
+            return null;
+        }
+
+
+
 
     }
 }

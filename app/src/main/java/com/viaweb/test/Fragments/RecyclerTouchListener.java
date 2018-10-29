@@ -1,4 +1,4 @@
-package com.viaweb.test;
+package com.viaweb.test.Fragments;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

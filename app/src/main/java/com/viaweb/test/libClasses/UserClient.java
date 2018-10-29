@@ -1,4 +1,6 @@
-package com.viaweb.test;
+package com.viaweb.test.libClasses;
+
+import android.util.Log;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -80,6 +82,7 @@ public class UserClient {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+
         return user;
     }
 
@@ -145,6 +148,7 @@ public class UserClient {
         this.setUser(us);
         searchFood.setSearch(true);
         this.getUser().getSearchFood().add(searchFood);
+        Log.e("before search  food", this.getUser().toString());
 
         try {
             oos.writeObject(this.getUser());
@@ -155,8 +159,8 @@ public class UserClient {
         }
 
         try {
-            user=(User)ois.readObject();
-            this.setUser(user);
+            us=(User)ois.readObject();
+            this.setUser(us);
 
         } catch (IOException e) {
 
@@ -165,7 +169,8 @@ public class UserClient {
 
             e.printStackTrace();
         }
-        return user;
+
+        return us;
     }
 
 

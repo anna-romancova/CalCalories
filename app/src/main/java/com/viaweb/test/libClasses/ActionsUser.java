@@ -1,4 +1,4 @@
-package com.viaweb.test;
+package com.viaweb.test.libClasses;
 
 public class ActionsUser {
     public static final String AUTORIZATION = "Autorization";

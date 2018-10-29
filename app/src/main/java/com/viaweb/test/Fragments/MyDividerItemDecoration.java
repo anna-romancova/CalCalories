@@ -1,4 +1,4 @@
-package com.viaweb.test;
+package com.viaweb.test.Fragments;
 
 import android.content.Context;
 import android.content.res.Resources;

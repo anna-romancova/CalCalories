@@ -1,10 +1,9 @@
-package com.viaweb.test;
+package com.viaweb.test.Fragments;
 
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,15 +14,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.viaweb.test.Calculate;
+import com.viaweb.test.R;
+
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import edu.itstap.calculator.Food;
+import edu.itstap.calculator.FoodInHistory;
 import edu.itstap.calculator.User;
 
 
@@ -43,10 +46,19 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
     private TextView tvData;
     private   EditText edWeight;
     private Double weightFoOneProduct;
+    public static String CURRENT_TAG="";
 
 
     public void updateViews()
     {
+        parentrSearch.requestFocus();
+        foodArrayList.clear();
+        foodArrayList = cal.getUser().getSearchFood();
+        mAdapter = new RecyclerAdapterSearchProduct(foodArrayList);
+        mAdapter.notifyDataSetChanged();
+        recResultProduct.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
+
 
     }
 
@@ -96,9 +108,11 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
                     public void onClick(DialogInterface dialog, int which) {
                         weightFoOneProduct = Double.valueOf(edWeight.getText().toString());
                         if(!weightFoOneProduct.isNaN()) {
-                            cal.getUser().getFoods().add(cal.calculateOneProduct(foodOfList, weightFoOneProduct));
-                            Log.d(cal.TAG,cal.getUser().toString());
-                            cal.invalidateOptionsMenu();
+                            CalculateAsynckTask calculateAsynckTask=new CalculateAsynckTask();
+                            calculateAsynckTask.execute();
+
+
+
 
                         }
 
@@ -148,18 +162,54 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
             case R.id.btnsearchProduct:
                 if(searchNameFood.getText()!=null){
                 String st=searchNameFood.getText().toString();
-                cal.searchProduct(st);
-                    parentrSearch.requestFocus();
-                    foodArrayList.clear();
-                    foodArrayList = cal.getUser().getSearchFood();
-                    mAdapter = new RecyclerAdapterSearchProduct(foodArrayList);
-                    mAdapter.notifyDataSetChanged();
-                    recResultProduct.setAdapter(mAdapter);
-                    mAdapter.notifyDataSetChanged();
+                    SerchAsynckTask asynkTask=new SerchAsynckTask();
+                    asynkTask.execute(st);
+
                 }else {
                     Log.e(cal.TAG,"empty searchNameFood ");
                 }
                 break;
+        }
+    }
+
+
+    private  class SerchAsynckTask extends AsyncTask<String,Void,Void>{
+
+
+        @Override
+        protected Void doInBackground(String... params) {
+            cal.searchProduct(params[0]);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+
+        }
+    }
+
+    private  class CalculateAsynckTask extends AsyncTask<Void,Void,Void>{
+
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            Food foodWithCalculate =cal.calculateOneProduct(foodOfList, weightFoOneProduct);
+
+            Timestamp time= new Timestamp(System.currentTimeMillis());
+
+            FoodInHistory fH=new FoodInHistory(foodWithCalculate,weightFoOneProduct);
+            fH.setTime(time);
+            ArrayList<FoodInHistory> ar=new ArrayList<>();
+            ar.add(fH);
+            cal.getUser().getHistoryFoods().add(ar);
+            Log.d(cal.TAG,cal.getUser().toString());
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            cal.invalidateOptionsMenu();
         }
     }
 }

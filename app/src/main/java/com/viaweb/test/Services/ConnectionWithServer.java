@@ -1,4 +1,4 @@
-package com.viaweb.test;
+package com.viaweb.test.Services;
 
 import android.app.PendingIntent;
 import android.app.Service;
@@ -6,9 +6,9 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
 
-import java.util.ArrayList;
+import com.viaweb.test.libClasses.UserClient;
+import com.viaweb.test.libClasses.ActionsUser;
 
-import edu.itstap.calculator.Food;
 import edu.itstap.calculator.User;
 
 public class ConnectionWithServer extends Service {
@@ -112,5 +112,10 @@ public class ConnectionWithServer extends Service {
     }
 
 
+    @Override
+    public void onDestroy() {
+        stopSelf();
+        super.onDestroy();
 
+    }
 }
