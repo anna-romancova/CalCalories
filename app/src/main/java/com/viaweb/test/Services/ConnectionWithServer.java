@@ -103,6 +103,37 @@ public class ConnectionWithServer extends Service {
 
 
                 break;
+            case ActionsUser.REGISTRATION:
+                final Intent  registrationInt=intent;
+                Thread trReg=new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        User us=(User) registrationInt.getSerializableExtra("user");
+                        Log.d("before regestration",us.toString());
+                        user= userClient.registration(registrationInt.getStringExtra("login"),registrationInt.getStringExtra("password"),registrationInt.getStringExtra("email"));
+                        if (!user.isReg()) {
+
+                            PendingIntent pi = registrationInt.getParcelableExtra("pi");
+
+                            Intent intentReg = new Intent().putExtra("user",user);
+                            try {
+                                pi.send(ConnectionWithServer.this,10 , intentReg);
+                            } catch (PendingIntent.CanceledException e) {
+                                e.printStackTrace();
+                            }
+
+
+                        }
+
+                    }
+                });
+                trReg.start();
+
+                break;
+            case ActionsUser.ADD_FOOD:
+
+                break;
+
         }
 
 

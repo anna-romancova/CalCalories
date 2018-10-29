@@ -153,8 +153,13 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
     @Override
     public void onStart() {
         super.onStart();
-
+        if( cal.getUser()!=null) {
+            if (cal.getUser().isAutorization())
+                cal.getFab().setVisibility(View.VISIBLE);
+        }
     }
+
+
 
     @Override
     public void onClick(View view) {

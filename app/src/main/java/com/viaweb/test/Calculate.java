@@ -66,6 +66,7 @@ public class Calculate extends AppCompatActivity
     private EditText fatsFoodAdd ;
     private EditText carbFoodAdd ;
     private EditText calorsFoodAdd;
+    private String emailStr;
     private EditText edWeight;
 
 
@@ -144,7 +145,7 @@ public class Calculate extends AppCompatActivity
                         .setAction("Add", new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                AlertDialog.Builder addFood = new AlertDialog.Builder(getApplicationContext());
+                                AlertDialog.Builder addFood = new AlertDialog.Builder(Calculate.this);
                                 addFood.setTitle("Add food!");
                                 LayoutInflater inflater = getLayoutInflater();
                                 View vAddFood = inflater.inflate(R.layout.add_food, null, false);
@@ -163,6 +164,7 @@ public class Calculate extends AppCompatActivity
                                                 &&!fatsFoodAdd.getText().toString().isEmpty()
                                                 &&!carbFoodAdd.getText().toString().isEmpty()
                                                 &&!carbFoodAdd.getText().toString().isEmpty()) {
+
                                             AddFoodsynkTask addFood=new AddFoodsynkTask();
                                             addFood.execute();
                                         }
@@ -253,6 +255,12 @@ public class Calculate extends AppCompatActivity
                     Fragment f = getSupportFragmentManager().findFragmentById(R.id.frameContainer);
                     SearchProduct fragment = (SearchProduct)f;
                     fragment.updateViews();
+                    stopService(new Intent(getBaseContext(),ConnectionWithServer.class));
+                    break;
+                case 3:
+                    stopService(new Intent(getBaseContext(),ConnectionWithServer.class));
+                    break;
+                case 4:
                     stopService(new Intent(getBaseContext(),ConnectionWithServer.class));
                     break;
             }
@@ -369,7 +377,7 @@ public class Calculate extends AppCompatActivity
 
                 break;
             case R.id.sing_out:
-                Toast.makeText(this, "sing out", Toast.LENGTH_SHORT).show();
+
                 break;
             case R.id.registarion:
                 Toast.makeText(this, "registarion", Toast.LENGTH_SHORT).show();
@@ -384,15 +392,16 @@ public class Calculate extends AppCompatActivity
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Dialog f = (Dialog) dialog;
-                        EditText login = f.findViewById(R.id.login);
-                        EditText password = f.findViewById(R.id.password);
+                        EditText login = f.findViewById(R.id.edLoginReg);
+                        EditText password = f.findViewById(R.id.edPasswordReg);
+                        EditText email = f.findViewById(R.id.edEmailReg);
+
                         loginString = login.getText().toString();
                         passwordString = password.getText().toString();
-                        if (!loginString.isEmpty() && !passwordString.isEmpty()) {
-                            AutorizationAsynkTask aut=new AutorizationAsynkTask();
-                            aut.execute();
-
-
+                        emailStr = email.getText().toString();
+                        if (!loginString.isEmpty() && !passwordString.isEmpty() &&!emailStr.isEmpty()) {
+                            RegistrationAsynkTask reg=new RegistrationAsynkTask();
+                            reg.execute();
                         }
                     }
 
@@ -495,6 +504,15 @@ public class Calculate extends AppCompatActivity
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(this.getUser()!=null){
+        if(this.getUser().isAutorization())
+            this.getFab().setVisibility(View.INVISIBLE);
+        }
+    }
+
     public void searchProduct (String searchNameFoodString) {
         Log.d("nameFood", searchNameFoodString);
 
@@ -544,6 +562,51 @@ public class Calculate extends AppCompatActivity
 
 
     }
+    class  RegistrationAsynkTask extends AsyncTask<Void,Void,Void>{
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            PendingIntent pi = createPendingResult(4, new Intent(), PendingIntent.FLAG_UPDATE_CURRENT);
+            Intent intent = new Intent(getBaseContext(), ConnectionWithServer.class)
+                    .putExtra("login", loginString)
+                    .putExtra("password", passwordString)
+                    .putExtra("pi", pi)
+                    .putExtra("email",emailStr)
+                    .setAction(ActionsUser.REGISTRATION)
+                    .setPackage(getPackageName());
+            int result = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.INTERNET);
+            if (result == PackageManager.PERMISSION_GRANTED) {
+                getApplicationContext().startService(intent);
+                Log.d("startService", "startService");
+            }
+
+            return null;
+        }
+
+    }
+    class  SingOutAsynkTask extends AsyncTask<Void,Void,Void>{
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            PendingIntent pi = createPendingResult(4, new Intent(), PendingIntent.FLAG_UPDATE_CURRENT);
+            Intent intent = new Intent(getBaseContext(), ConnectionWithServer.class)
+                    .putExtra("login", loginString)
+                    .putExtra("password", passwordString)
+                    .putExtra("pi", pi)
+                    .setAction(ActionsUser.SING_OUT)
+                    .setPackage(getPackageName());
+            int result = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.INTERNET);
+            if (result == PackageManager.PERMISSION_GRANTED) {
+                getApplicationContext().startService(intent);
+                Log.d("startService", "startService");
+            }
+
+            return null;
+        }
+
+    }
     class  AddFoodsynkTask extends AsyncTask<Void,Void,Void>{
 
         @Override
@@ -566,9 +629,9 @@ public class Calculate extends AppCompatActivity
 
             return null;
         }
+    }
 
-
-
-
+    public FloatingActionButton getFab() {
+        return fab;
     }
 }

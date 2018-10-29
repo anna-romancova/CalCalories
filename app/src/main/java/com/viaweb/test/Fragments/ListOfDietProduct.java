@@ -50,7 +50,6 @@ public class ListOfDietProduct extends Fragment implements View.OnClickListener 
 
 
           ArrayList<FoodInHistory> fH=  cal.getUser().getHistoryFoods().get(i);
-
                 for (FoodInHistory food : fH) {
                     TableRow row = (TableRow) LayoutInflater.from(getContext()).inflate(R.layout.attrib_row, null);
                     Date d= food.getTime();
@@ -83,6 +82,11 @@ public class ListOfDietProduct extends Fragment implements View.OnClickListener 
         tl.requestLayout();
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        cal.getFab().setVisibility(View.INVISIBLE);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
