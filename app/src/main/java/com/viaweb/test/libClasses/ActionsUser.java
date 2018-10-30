@@ -9,6 +9,8 @@ public class ActionsUser {
 
     public static final String CLEAN_HISTORY = "Clean history";
     public static final String SING_OUT = "Sing out";
+    public static final String UPDATE_DATA_PROFILE = "Update data profile";
+
 
 
     public static final String ADD_FOOD = "Add food";

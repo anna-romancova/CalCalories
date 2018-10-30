@@ -246,7 +246,7 @@ public class Calculate extends AppCompatActivity
         if (resultCode == 10) {
             switch (requestCode) {
                 case 1:
-
+                    //autor
                     setUser(((User) data.getSerializableExtra("user")));
                     Log.e("autorization aftre user", getUser().toString());
                     fab.setVisibility(View.VISIBLE);
@@ -258,6 +258,7 @@ public class Calculate extends AppCompatActivity
 
                     break;
                 case 2:
+                    //search food
                     setUser(((User) data.getSerializableExtra("user")));
 
                     Fragment f = getSupportFragmentManager().findFragmentById(R.id.frameContainer);
@@ -266,16 +267,23 @@ public class Calculate extends AppCompatActivity
                     stopService(new Intent(getBaseContext(),ConnectionWithServer.class));
                     break;
                 case 3:
+                    //add prod
 
                     stopService(new Intent(getBaseContext(),ConnectionWithServer.class));
                     break;
                 case 4:
+                    //reg
                     setUser(((User) data.getSerializableExtra("user")));
                     Log.e("registration aftre user", getUser().toString());
                     fab.setVisibility(View.VISIBLE);
                     navigationView.getMenu().setGroupVisible(R.id.grAutorisationGroup, true);
                     invalidateOptionsMenu();
                     tvLoginUsersHeader.setText(this.getUser().getUserName()+" Goal:"+this.getUser().getGoalOfCalories());
+                    stopService(new Intent(getBaseContext(),ConnectionWithServer.class));
+                    break;
+                case 5:
+                    setUser(((User) data.getSerializableExtra("user")));
+                    getUser().setProfileUpdate(false);
                     stopService(new Intent(getBaseContext(),ConnectionWithServer.class));
                     break;
             }
@@ -512,6 +520,21 @@ public class Calculate extends AppCompatActivity
         if(this.getUser()!=null){
         if(this.getUser().isAutorization())
             this.getFab().setVisibility(View.INVISIBLE);
+        }
+    }
+
+
+    public void  updateProfile(User user){
+        PendingIntent pi = createPendingResult(5, new Intent(), PendingIntent.FLAG_UPDATE_CURRENT);
+        Intent intent = new Intent(getApplicationContext(), ConnectionWithServer.class)
+                .putExtra("user",user)
+                .putExtra("pi", pi)
+                .setAction(ActionsUser.UPDATE_DATA_PROFILE)
+                .setPackage(getPackageName());
+        int result = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.INTERNET);
+        if (result == PackageManager.PERMISSION_GRANTED) {
+            startService(intent);
+            Log.d("startService", "startService");
         }
     }
 

@@ -131,6 +131,30 @@ public class ConnectionWithServer extends Service {
             case ActionsUser.ADD_FOOD:
 
                 break;
+            case ActionsUser.UPDATE_DATA_PROFILE:
+                final Intent intentUpProf= intent;
+                Thread trUp=new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        user= userClient.updateDataUser(((User) intentUpProf.getSerializableExtra("user")));
+                        if (user.isProfileUpdate()) {
+                            PendingIntent pi = intentUpProf.getParcelableExtra("pi");
+                            Intent intentReg = new Intent().putExtra("user",user);
+                            try {
+                                pi.send(ConnectionWithServer.this,10 , intentReg);
+                            } catch (PendingIntent.CanceledException e) {
+                                e.printStackTrace();
+                            }
+
+
+                        }
+
+                    }
+                });
+                trUp.start();
+
+                break;
+
 
         }
 
