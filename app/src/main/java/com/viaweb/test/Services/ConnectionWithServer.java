@@ -25,9 +25,9 @@ public class ConnectionWithServer extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        userClient = new UserClient("10.0.2.2", 6447);
 //        userClient = new UserClient("10.0.2.2", 6447);
-//                        userClient = new UserClient("192.168.31.116", 6447);//c phone sudo ifconfig
+//        userClient = new UserClient("10.0.2.2", 6447);
+                      userClient = new UserClient("192.168.31.116", 6447);//c phone sudo ifconfig
 
     }
 
@@ -84,9 +84,9 @@ public class ConnectionWithServer extends Service {
 
                             PendingIntent pi = searchInt.getParcelableExtra("pi");
 
-                            Intent intentAut = new Intent().putExtra("user",user);
+                            Intent intentSearch = new Intent().putExtra("user",user);
                             try {
-                                pi.send(ConnectionWithServer.this,10 , intentAut);
+                                pi.send(ConnectionWithServer.this,10 , intentSearch);
                             } catch (PendingIntent.CanceledException e) {
                                 e.printStackTrace();
                             }
@@ -108,10 +108,8 @@ public class ConnectionWithServer extends Service {
                 Thread trReg=new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        User us=(User) registrationInt.getSerializableExtra("user");
-                        Log.d("before regestration",us.toString());
                         user= userClient.registration(registrationInt.getStringExtra("login"),registrationInt.getStringExtra("password"),registrationInt.getStringExtra("email"));
-                        if (!user.isReg()) {
+                        if (user.isReg()) {
 
                             PendingIntent pi = registrationInt.getParcelableExtra("pi");
 

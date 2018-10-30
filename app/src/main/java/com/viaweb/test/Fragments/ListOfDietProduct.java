@@ -53,7 +53,7 @@ public class ListOfDietProduct extends Fragment implements View.OnClickListener 
                 for (FoodInHistory food : fH) {
                     TableRow row = (TableRow) LayoutInflater.from(getContext()).inflate(R.layout.attrib_row, null);
                     Date d= food.getTime();
-                    SimpleDateFormat formateDate = new SimpleDateFormat("yyyy-MM-dd");
+                    SimpleDateFormat formateDate = new SimpleDateFormat("MM-dd");
                     t= formateDate.format(d);
                     ((TextView) row.findViewById(R.id.attrib_date)).setText("");
                     ((TextView) row.findViewById(R.id.attrib_name)).setText(food.getFood().getName());

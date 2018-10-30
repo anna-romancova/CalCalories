@@ -14,6 +14,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.preference.PreferenceActivity;
 import android.support.design.widget.FloatingActionButton;
 
 import android.support.design.widget.Snackbar;
@@ -36,6 +37,7 @@ import android.widget.EditText;
 
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.viaweb.test.Fragments.CalculateOfReqired;
@@ -81,6 +83,7 @@ public class Calculate extends AppCompatActivity
     private EditText searchNameFood;
     private ArrayList<Food> foodArrayList;
     private LinearLayout parentrSearch;
+    private TextView tvLoginUsersHeader;
 
 
     private class SQLiteConnector extends SQLiteOpenHelper {
@@ -131,6 +134,7 @@ public class Calculate extends AppCompatActivity
         searchProduct = new SearchProduct();
         ft.replace(R.id.frameContainer, searchProduct);
         ft.commit();
+
 
         if (android.os.Build.VERSION.SDK_INT > 9) {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -197,6 +201,8 @@ public class Calculate extends AppCompatActivity
         toggle.syncState();
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        tvLoginUsersHeader =navigationView.getHeaderView(0).findViewById(R.id.tvLoginUsersHeader);
+
     }
 
     public ArrayList<Food> testFood() {
@@ -247,6 +253,8 @@ public class Calculate extends AppCompatActivity
                     navigationView.getMenu().setGroupVisible(R.id.grAutorisationGroup, true);
                     invalidateOptionsMenu();
                     stopService(new Intent(getBaseContext(),ConnectionWithServer.class));
+                    tvLoginUsersHeader.setText(this.getUser().getUserName()+" Goal:"+this.getUser().getGoalOfCalories());
+
 
                     break;
                 case 2:
@@ -258,9 +266,16 @@ public class Calculate extends AppCompatActivity
                     stopService(new Intent(getBaseContext(),ConnectionWithServer.class));
                     break;
                 case 3:
+
                     stopService(new Intent(getBaseContext(),ConnectionWithServer.class));
                     break;
                 case 4:
+                    setUser(((User) data.getSerializableExtra("user")));
+                    Log.e("registration aftre user", getUser().toString());
+                    fab.setVisibility(View.VISIBLE);
+                    navigationView.getMenu().setGroupVisible(R.id.grAutorisationGroup, true);
+                    invalidateOptionsMenu();
+                    tvLoginUsersHeader.setText(this.getUser().getUserName()+" Goal:"+this.getUser().getGoalOfCalories());
                     stopService(new Intent(getBaseContext(),ConnectionWithServer.class));
                     break;
             }
@@ -301,7 +316,7 @@ public class Calculate extends AppCompatActivity
             singOut.setVisible(false);
         }
 
-        if(getUser()==null){
+        if(getUser()==null||getUser().getHistoryFoods().isEmpty()){
             listProduct.setVisible(false);
         }else if(getUser()!=null&&!getUser().getHistoryFoods().isEmpty()){
             listProduct.setVisible(true);
@@ -310,26 +325,6 @@ public class Calculate extends AppCompatActivity
 
     }
 
-/*    @Override
-    public boolean onPrepareOptionsMenu(Menu menu)
-    {
-        MenuItem singIn = menu.findItem(R.id.sing_in);
-        MenuItem singOut = menu.findItem(R.id.sing_out);
-        MenuItem registr = menu.findItem(R.id.registarion);
-        if(user!=null && user.isAutorization())
-        {
-            singOut.setVisible(true);
-            singIn.setVisible(false);
-            registr.setVisible(false);
-        }
-        else
-        {
-            singIn.setVisible(true);
-            registr.setVisible(true);
-            singOut.setVisible(false);
-        }
-        return true;
-    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -377,6 +372,12 @@ public class Calculate extends AppCompatActivity
 
                 break;
             case R.id.sing_out:
+                this.setUser(new User(""));
+                getUser().setAutorization(false);
+                fab.setVisibility(View.INVISIBLE);
+                navigationView.getMenu().setGroupVisible(R.id.grAutorisationGroup, false);
+                tvLoginUsersHeader.setText("");
+                invalidateOptionsMenu();
 
                 break;
             case R.id.registarion:
@@ -449,6 +450,7 @@ public class Calculate extends AppCompatActivity
             ft.commit();
 
         } else if (id == R.id.nav_history) {
+
 
         } else if (id == R.id.nav_calculate) {
 
@@ -585,28 +587,7 @@ public class Calculate extends AppCompatActivity
         }
 
     }
-    class  SingOutAsynkTask extends AsyncTask<Void,Void,Void>{
 
-        @Override
-        protected Void doInBackground(Void... voids) {
-
-            PendingIntent pi = createPendingResult(4, new Intent(), PendingIntent.FLAG_UPDATE_CURRENT);
-            Intent intent = new Intent(getBaseContext(), ConnectionWithServer.class)
-                    .putExtra("login", loginString)
-                    .putExtra("password", passwordString)
-                    .putExtra("pi", pi)
-                    .setAction(ActionsUser.SING_OUT)
-                    .setPackage(getPackageName());
-            int result = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.INTERNET);
-            if (result == PackageManager.PERMISSION_GRANTED) {
-                getApplicationContext().startService(intent);
-                Log.d("startService", "startService");
-            }
-
-            return null;
-        }
-
-    }
     class  AddFoodsynkTask extends AsyncTask<Void,Void,Void>{
 
         @Override
