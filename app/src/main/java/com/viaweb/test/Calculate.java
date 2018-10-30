@@ -46,10 +46,12 @@ import com.viaweb.test.Fragments.Profile;
 import com.viaweb.test.Fragments.SearchProduct;
 import com.viaweb.test.Services.ConnectionWithServer;
 import com.viaweb.test.libClasses.ActionsUser;
+import com.viaweb.test.libClasses.UserClient;
 
 import java.util.ArrayList;
 
 import edu.itstap.calculator.Food;
+import edu.itstap.calculator.FoodInHistory;
 import edu.itstap.calculator.User;
 
 public class Calculate extends AppCompatActivity
@@ -86,6 +88,7 @@ public class Calculate extends AppCompatActivity
     private TextView tvLoginUsersHeader;
 
 
+
     private class SQLiteConnector extends SQLiteOpenHelper {
         private Context context;
 
@@ -99,7 +102,9 @@ public class Calculate extends AppCompatActivity
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            db.execSQL("Create table hostoryFoods(_id integer primary key autoincrement,name varchar(50), email varchar(50));");
+            db.execSQL("Create table historyFoods(_id integer primary key autoincrement,menu nvarchar(255));");
+            db.execSQL("Create table myFoods(_id integer primary key autoincrement,menu nvarchar(255));");
+
             Toast.makeText(context, "DB has been created", Toast.LENGTH_SHORT).show();
 
 
@@ -249,36 +254,12 @@ public class Calculate extends AppCompatActivity
                     //autor
                     setUser(((User) data.getSerializableExtra("user")));
                     Log.e("autorization aftre user", getUser().toString());
-                    fab.setVisibility(View.VISIBLE);
-                    navigationView.getMenu().setGroupVisible(R.id.grAutorisationGroup, true);
-                    invalidateOptionsMenu();
-                    stopService(new Intent(getBaseContext(),ConnectionWithServer.class));
-                    tvLoginUsersHeader.setText(this.getUser().getUserName()+" Goal:"+this.getUser().getGoalOfCalories());
-
-
-                    break;
-                case 2:
-                    //search food
-                    setUser(((User) data.getSerializableExtra("user")));
-
-                    Fragment f = getSupportFragmentManager().findFragmentById(R.id.frameContainer);
-                    SearchProduct fragment = (SearchProduct)f;
-                    fragment.updateViews();
-                    stopService(new Intent(getBaseContext(),ConnectionWithServer.class));
-                    break;
-                case 3:
-                    //add prod
-
                     stopService(new Intent(getBaseContext(),ConnectionWithServer.class));
                     break;
                 case 4:
                     //reg
                     setUser(((User) data.getSerializableExtra("user")));
                     Log.e("registration aftre user", getUser().toString());
-                    fab.setVisibility(View.VISIBLE);
-                    navigationView.getMenu().setGroupVisible(R.id.grAutorisationGroup, true);
-                    invalidateOptionsMenu();
-                    tvLoginUsersHeader.setText(this.getUser().getUserName()+" Goal:"+this.getUser().getGoalOfCalories());
                     stopService(new Intent(getBaseContext(),ConnectionWithServer.class));
                     break;
                 case 5:
@@ -287,7 +268,35 @@ public class Calculate extends AppCompatActivity
                     stopService(new Intent(getBaseContext(),ConnectionWithServer.class));
                     break;
             }
+            invalidateOptionsMenu();
+            if(getUser().isAutorization()){
+                fab.setVisibility(View.VISIBLE);
+                navigationView.getMenu().setGroupVisible(R.id.grAutorisationGroup, true);
+                tvLoginUsersHeader.setText(this.getUser().getUserName()+" Goal:"+this.getUser().getGoalOfCalories());
+            }else {
+                fab.setVisibility(View.INVISIBLE);
+                navigationView.getMenu().setGroupVisible(R.id.grAutorisationGroup, false);
+                tvLoginUsersHeader.setText("");
+            }
+        }else if(resultCode == 11){
+            switch (requestCode) {
+                case 2:
+                    //search food
+                    setUser(((User) data.getSerializableExtra("user")));
+                    Fragment f = getSupportFragmentManager().findFragmentById(R.id.frameContainer);
+                    SearchProduct fragment = (SearchProduct)f;
+                    fragment.updateViews();
+                    stopService(new Intent(getBaseContext(),ConnectionWithServer.class));
+                    break;
+                case 3:
+                    //add prod
+                    stopService(new Intent(getBaseContext(),ConnectionWithServer.class));
+                    break;
+
+            }
         }
+
+
     }
 
     @Override
@@ -546,7 +555,9 @@ public class Calculate extends AppCompatActivity
             if (getUser() == null) {
                 user = new User("");
             }
-
+            if (getUser().getFoods().isEmpty()){
+                getUser().getFoods().clear();
+            }
             PendingIntent pi = createPendingResult(2, new Intent(), PendingIntent.FLAG_UPDATE_CURRENT);
             Intent intent = new Intent(getBaseContext(), ConnectionWithServer.class)
                     .putExtra("nameProduct", searchNameFoodString)
@@ -615,13 +626,17 @@ public class Calculate extends AppCompatActivity
 
         @Override
         protected Void doInBackground(Void... voids) {
+            ArrayList<Food> newAdd=new ArrayList<>();
+          Food food=new Food(nameFoodAdd.getText().toString(), Double.valueOf(calorsFoodAdd.getText().toString()),
+                  Double.valueOf( protFoodAdd.getText().toString()),
+                  Double.valueOf(fatsFoodAdd.getText().toString()),
+                  Double.valueOf(carbFoodAdd.getText().toString()));
+            food.setAdd(true);
+
+            getUser().getAddFood().add(food);
             PendingIntent pi = createPendingResult(3, new Intent(), PendingIntent.FLAG_UPDATE_CURRENT);
             Intent intent = new Intent(getBaseContext(), ConnectionWithServer.class)
-                    .putExtra("name", nameFoodAdd.getText().toString())
-                    .putExtra("proteine", protFoodAdd.getText().toString())
-                    .putExtra("fats", fatsFoodAdd.getText().toString())
-                    .putExtra("carbohydrate", carbFoodAdd.getText().toString())
-                    .putExtra("calors", calorsFoodAdd.getText().toString())
+                    .putExtra("user",getUser())
                     .putExtra("pi", pi)
                     .setAction(ActionsUser.ADD_FOOD)
                     .setPackage(getPackageName());
@@ -637,5 +652,23 @@ public class Calculate extends AppCompatActivity
 
     public FloatingActionButton getFab() {
         return fab;
+    }
+
+    @Override
+    protected void onResumeFragments() {
+        super.onResumeFragments();
+        invalidateOptionsMenu();
+        if(getUser()!=null){
+        if(getUser().isAutorization()){
+            fab.setVisibility(View.VISIBLE);
+            navigationView.getMenu().setGroupVisible(R.id.grAutorisationGroup, true);
+            tvLoginUsersHeader.setText(this.getUser().getUserName()+" Goal:"+this.getUser().getGoalOfCalories());
+        }else {
+            fab.setVisibility(View.INVISIBLE);
+            navigationView.getMenu().setGroupVisible(R.id.grAutorisationGroup, false);
+            tvLoginUsersHeader.setText("");
+        }
+        }
+
     }
 }

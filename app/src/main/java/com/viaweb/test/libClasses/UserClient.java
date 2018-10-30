@@ -121,17 +121,10 @@ public class UserClient {
 
     }
 
-    public boolean addNewFood(String name,Double calories,Double protein, Double fats, Double carbohydrate) {
+    public boolean addNewFood(User user) {
         boolean add=false;
-        ArrayList<Food> newAdd=new ArrayList<>();
-        food=new Food(name, calories, protein, fats, carbohydrate);
-        food.setAdd(true);
-
-        getUser().getAddFood().add(food);
-        System.out.println(getUser().toString());
-
         try {
-            oos.writeObject(getUser());
+            oos.writeObject(user);
             oos.flush();
             add=true;
 
@@ -147,9 +140,11 @@ public class UserClient {
         Food searchFood =new Food(nameFood, 0.0, 0.0, 0.0, 0.0);
         this.setUser(us);
         searchFood.setSearch(true);
+        if(!this.getUser().getSearchFood().isEmpty()) {
+            this.getUser().getSearchFood().clear();
+        }
         this.getUser().getSearchFood().add(searchFood);
         Log.e("before search  food", this.getUser().toString());
-
         try {
             oos.writeObject(this.getUser());
             oos.flush();
