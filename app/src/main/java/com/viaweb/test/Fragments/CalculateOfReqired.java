@@ -99,6 +99,8 @@ public class CalculateOfReqired extends Fragment implements View.OnClickListener
                 cal.execute();
                 break;
             case R.id.saveInMyProfile:
+                SaveInDB saveInDB=new SaveInDB();
+                saveInDB.execute();
 
 
                 break;
@@ -159,7 +161,6 @@ public class CalculateOfReqired extends Fragment implements View.OnClickListener
             if(tvResult.getText()!=null){
                 tvResult.setText(" ");
             }
-            cal.getUser().setGoalOfCalories(resuliOfCalculationRequarium);
             tvResult.setText("You need "+String.valueOf(Math.floor(resuliOfCalculationRequarium))+" kcal per day.");
             save.setVisibility(View.VISIBLE);
         }
@@ -173,6 +174,8 @@ public class CalculateOfReqired extends Fragment implements View.OnClickListener
                 try {
                     Socket soc=new Socket("10.0.2.2", 6447);
                     UserClient usClient = new UserClient(soc);
+                    cal.getUser().setInsertGoal(true);
+                    cal.getUser().setGoalOfCalories((Math.floor(resuliOfCalculationRequarium)));
                     cal.setUser(usClient.saveGoalInProfile(cal.getUser()));
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -185,7 +188,7 @@ public class CalculateOfReqired extends Fragment implements View.OnClickListener
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            Toast.makeText(getContext(),"@string/informationSaved",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(),"Information has been saved",Toast.LENGTH_SHORT).show();
         }
     }
 }

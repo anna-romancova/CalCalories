@@ -192,15 +192,11 @@ public class UserClient {
 
     public User saveGoalInProfile(User user) {
 
+
         try {
             writers();
             oos.writeObject(user);
             oos.flush();
-        } catch (IOException e) {
-
-            e.printStackTrace();
-        }
-        try {
             user=(User)ois.readObject();
             this.setUser(user);
 
@@ -210,6 +206,8 @@ public class UserClient {
         } catch (ClassNotFoundException e) {
 
             e.printStackTrace();
+        }finally {
+            closeWriters();
         }
         return user;
 
