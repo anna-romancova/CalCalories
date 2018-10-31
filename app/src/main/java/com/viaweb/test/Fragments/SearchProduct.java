@@ -1,12 +1,16 @@
 package com.viaweb.test.Fragments;
 
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,7 +25,10 @@ import android.widget.TextView;
 
 import com.viaweb.test.Calculate;
 import com.viaweb.test.R;
+import com.viaweb.test.libClasses.UserClient;
 
+import java.io.IOException;
+import java.net.Socket;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
@@ -46,7 +53,6 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
     private TextView tvData;
     private   EditText edWeight;
     private Double weightFoOneProduct;
-    public static String CURRENT_TAG="";
 
 
     public void updateViews()
@@ -158,6 +164,33 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
                 cal.getFab().setVisibility(View.VISIBLE);
         }
     }
+    public void searchProduct (String searchNameFoodString) {
+
+        Log.d("nameFood", searchNameFoodString);
+
+        if (!searchNameFoodString.isEmpty()) {
+
+            if (cal.getUser() == null) {
+                cal.setUser(new User(""));
+            }
+            if (cal.getUser().getFoods().isEmpty()){
+                cal.getUser().getFoods().clear();
+
+            }
+            int result = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.INTERNET);
+            if (result == PackageManager.PERMISSION_GRANTED) {
+            try {
+                Socket soc=new Socket("10.0.2.2", 6447);
+                UserClient usClient = new UserClient(soc);
+                cal.setUser(usClient.searchFood(searchNameFoodString,cal.getUser()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            }
+        }
+
+    }
 
 
 
@@ -182,20 +215,33 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
 
 
         @Override
-        protected Void doInBackground(String... params) {
-            cal.searchProduct(params[0]);
-            return null;
+        protected void onPreExecute() {
+            super.onPreExecute();
+            search.setFocusableInTouchMode(false);
+            search.setEnabled(false);
+            Log.e("SerchAsynckTask","start");
+
         }
 
         @Override
+        protected Void doInBackground(String... params) {
+            searchProduct(params[0]);
+            return null;
+        }
+
+
+
+        @Override
         protected void onPostExecute(Void aVoid) {
+            updateViews();
+            search.setEnabled(true);
+            search.setFocusableInTouchMode(true);
+            Log.e("SerchAsynckTask","stop");
 
         }
     }
 
     private  class CalculateAsynckTask extends AsyncTask<Void,Void,Void>{
-
-
         @Override
         protected Void doInBackground(Void... voids) {
             Food foodWithCalculate =cal.calculateOneProduct(foodOfList, weightFoOneProduct);

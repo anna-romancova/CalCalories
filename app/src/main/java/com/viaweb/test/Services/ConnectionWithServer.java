@@ -10,6 +10,9 @@ import android.util.Log;
 import com.viaweb.test.libClasses.UserClient;
 import com.viaweb.test.libClasses.ActionsUser;
 
+import java.io.IOException;
+import java.net.Socket;
+
 import edu.itstap.calculator.User;
 
 public class ConnectionWithServer extends Service {
@@ -28,8 +31,12 @@ public class ConnectionWithServer extends Service {
     public void onCreate() {
         super.onCreate();
 //        userClient = new UserClient("10.0.2.2", 6447);
-//        userClient = new UserClient("10.0.2.2", 6447);
-        userClient = new UserClient("192.168.31.116", 6447);//c phone sudo ifconfig
+        try {
+            userClient = new UserClient( new Socket("10.0.2.2", 6447));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+//        userClient = new UserClient("192.168.31.116", 6447);//c phone sudo ifconfig
 
     }
 
@@ -84,7 +91,7 @@ public class ConnectionWithServer extends Service {
 
                     break;
                 case ActionsUser.SEARCH:
-                    User us = (User) curentIntent.getSerializableExtra("user");
+                    /*User us = (User) curentIntent.getSerializableExtra("user");
                     Log.d("before server", us.toString());
 //                       userClient = new UserClient("192.168.31.116", 6447);//c phone sudo ifconfig
                     user = userClient.searchFood(curentIntent.getStringExtra("nameProduct"), us);
@@ -99,7 +106,7 @@ public class ConnectionWithServer extends Service {
                         } catch (PendingIntent.CanceledException e) {
                             e.printStackTrace();
                         }
-                    }
+                    }*/
                     break;
                 case ActionsUser.REGISTRATION:
                     user= userClient.registration(curentIntent.getStringExtra("login"),

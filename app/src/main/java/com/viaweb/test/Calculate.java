@@ -42,6 +42,7 @@ import android.widget.Toast;
 
 import com.viaweb.test.Fragments.CalculateOfReqired;
 import com.viaweb.test.Fragments.ListOfDietProduct;
+import com.viaweb.test.Fragments.MenuHistory;
 import com.viaweb.test.Fragments.Profile;
 import com.viaweb.test.Fragments.SearchProduct;
 import com.viaweb.test.Services.ConnectionWithServer;
@@ -63,6 +64,7 @@ public class Calculate extends AppCompatActivity
     public  static User user;
     private  String loginString;
     private String passwordString;
+    private UserClient userClient;
 
 
     private EditText nameFoodAdd ;
@@ -71,20 +73,14 @@ public class Calculate extends AppCompatActivity
     private EditText carbFoodAdd ;
     private EditText calorsFoodAdd;
     private String emailStr;
-    private EditText edWeight;
 
 
-    private RecyclerView recResultProduct;
-    private RecyclerView.Adapter mAdapter;
+
+
     private FloatingActionButton fab;
     private DrawerLayout drawer;
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
-    private ImageButton search;
-    private RecyclerView.LayoutManager mLayoutManager;
-    private EditText searchNameFood;
-    private ArrayList<Food> foodArrayList;
-    private LinearLayout parentrSearch;
     private TextView tvLoginUsersHeader;
 
 
@@ -208,6 +204,7 @@ public class Calculate extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         tvLoginUsersHeader =navigationView.getHeaderView(0).findViewById(R.id.tvLoginUsersHeader);
 
+
     }
 
     public ArrayList<Food> testFood() {
@@ -218,6 +215,14 @@ public class Calculate extends AppCompatActivity
         f.add(new Food("t3", 2.5, 2.5, 2.5, 2.5));
         f.add(new Food("t4", 2.5, 2.5, 2.5, 2.5));
         return f;
+    }
+
+    public UserClient getUserClient() {
+        return userClient;
+    }
+
+    public void setUserClient(UserClient userClient) {
+        this.userClient = userClient;
     }
 
     @Override
@@ -282,11 +287,11 @@ public class Calculate extends AppCompatActivity
             switch (requestCode) {
                 case 2:
                     //search food
-                    setUser(((User) data.getSerializableExtra("user")));
+                  /*  setUser(((User) data.getSerializableExtra("user")));
                     Fragment f = getSupportFragmentManager().findFragmentById(R.id.frameContainer);
                     SearchProduct fragment = (SearchProduct)f;
                     fragment.updateViews();
-                    stopService(new Intent(getBaseContext(),ConnectionWithServer.class));
+                    stopService(new Intent(getBaseContext(),ConnectionWithServer.class));*/
                     break;
                 case 3:
                     //add prod
@@ -467,6 +472,9 @@ public class Calculate extends AppCompatActivity
             ft.commit();
 
         } else if (id == R.id.nav_history) {
+            FragmentTransaction   ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.frameContainer, new MenuHistory());
+            ft.commit();
 
 
         } else if (id == R.id.nav_calculate) {
@@ -494,31 +502,7 @@ public class Calculate extends AppCompatActivity
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.btnsearchProduct:
-                String searchNameFoodString = searchNameFood.getText().toString();
-                Log.d("nameFood", searchNameFoodString);
 
-                if (!searchNameFoodString.isEmpty()) {
-
-                    if (getUser() == null) {
-                        user = new User("");
-                    }
-                    PendingIntent pi = createPendingResult(2, new Intent(), PendingIntent.FLAG_UPDATE_CURRENT);
-                    Intent intent = new Intent(getBaseContext(), ConnectionWithServer.class)
-                            .putExtra("nameProduct", searchNameFoodString)
-                            .putExtra("user", getUser())
-                            .putExtra("pi", pi)
-                            .setAction(ActionsUser.SEARCH)
-                            .setPackage(getPackageName());
-                    int result = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.INTERNET);
-                    if (result == PackageManager.PERMISSION_GRANTED) {
-                        getApplicationContext().startService(intent);
-                        Log.d("startService", "startService");
-                    }
-                }
-                parentrSearch.requestFocus();
-
-                break;
         }
 
     }

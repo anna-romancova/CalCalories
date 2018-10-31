@@ -2,6 +2,8 @@ package com.viaweb.test.libClasses;
 
 import android.util.Log;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -23,23 +25,40 @@ public class UserClient {
     private User user;
     private Food food;
 
+    public UserClient(Socket s) {
+        this.s = s;
+    }
 
-    public UserClient(String serverHost, int port) {
-        this.serverHost = serverHost;
+    /*
+        public UserClient(String serverHost, int port) {
+            this.serverHost = serverHost;
+            this.port = port;
+            try {
+                this.connect();
 
-        this.port = port;
-        try {
-            this.connect();
-            oos=new ObjectOutputStream(s.getOutputStream());
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }*/
+    private void writers() throws IOException{
+            oos=new ObjectOutputStream( new BufferedOutputStream(s.getOutputStream()));
             oos.flush();
-            ois=new ObjectInputStream(s.getInputStream());
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
+            ois=new ObjectInputStream(new BufferedInputStream(s.getInputStream()));
+    }
+    public void closeWriters(){
+        try {
+            if(s!=null) {
+                oos.close();
+                ois.close();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
+
 
 
     public User getUser() {
@@ -52,12 +71,6 @@ public class UserClient {
     }
 
 
-    private void connect() throws  IOException
-    {
-        s = new Socket(serverHost, port);
-        System.out.println("connect");
-
-    }
     public User autorization(String usName, String psw) {
         User user=new User(usName);
         user.setPassword(psw);
@@ -140,20 +153,15 @@ public class UserClient {
         Food searchFood =new Food(nameFood, 0.0, 0.0, 0.0, 0.0);
         this.setUser(us);
         searchFood.setSearch(true);
-        if(!this.getUser().getSearchFood().isEmpty()) {
+        if(this.getUser().getSearchFood().isEmpty()) {
             this.getUser().getSearchFood().clear();
         }
         this.getUser().getSearchFood().add(searchFood);
         Log.e("before search  food", this.getUser().toString());
         try {
+            writers();
             oos.writeObject(this.getUser());
             oos.flush();
-        } catch (IOException e) {
-
-            e.printStackTrace();
-        }
-
-        try {
             us=(User)ois.readObject();
             this.setUser(us);
 
@@ -161,9 +169,12 @@ public class UserClient {
 
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
-
             e.printStackTrace();
+        }finally {
+            closeWriters();
         }
+
+
 
         return us;
     }
@@ -174,6 +185,8 @@ public class UserClient {
         return "UserClient [s=" + s + ", port=" + port + ", serverHost=" + serverHost + ", ois=" + ois + ", oos=" + oos
                 + ", user=" + user + ", food=" + food + "]";
     }
+
+
 
 
     public User saveGoalInProfile(User user) {
