@@ -89,10 +89,11 @@
             android:orientation="horizontal">
 
             <RadioGroup
+                android:id="@+id/rGroupGender"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:checkedButton="@+id/rbMan">
+                android:checkedButton="@+id/rbMan"
+                android:orientation="horizontal">
 
                 <RadioButton
                     android:id="@+id/rbMan"

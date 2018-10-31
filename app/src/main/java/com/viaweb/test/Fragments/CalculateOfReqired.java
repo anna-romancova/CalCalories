@@ -4,6 +4,7 @@ package com.viaweb.test.Fragments;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,14 +24,16 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CalculateOfReqired extends Fragment implements View.OnClickListener {
+public class CalculateOfReqired extends Fragment implements View.OnClickListener,RadioGroup.OnCheckedChangeListener {
     private EditText weight;
     private EditText age;
     private EditText height;
     private Spinner styleOflife;
+    private RadioGroup rGroupGender;
     private RadioButton man;
     private RadioButton wooman;
     private Button result;
+    int BMPformule;
     private TextView tvResult;
     private double resuliOfCalculationRequarium;
 
@@ -66,6 +69,8 @@ public class CalculateOfReqired extends Fragment implements View.OnClickListener
         result=v.findViewById(R.id.btnGetResultGoal);
         result.setOnClickListener(this);
         tvResult=v.findViewById(R.id.tvResultGoal);
+        rGroupGender=v.findViewById(R.id.rGroupGender);
+        rGroupGender.setOnCheckedChangeListener(this);
 
 
 
@@ -85,27 +90,46 @@ public class CalculateOfReqired extends Fragment implements View.OnClickListener
         }
 
     }
+
+    @Override
+    public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
+        switch (checkedId) {
+
+            case R.id.rbMan:
+                BMPformule=0;
+                break;
+            case R.id.rbWooman:
+                BMPformule=1;
+                break;
+        }
+
+
+
+    }
+
     class CalcolateReqwireAsynkTask extends AsyncTask<Void,Void,Void>{
 
         @Override
         protected Void doInBackground(Void... voids) {
             double BMR=0.0;
-            if(man.isSelected()) {
-                BMR = 88.36 + (13.4 * Double.parseDouble(weight.getText().toString())) + (4.8 * Double.valueOf(height.getText().toString())) - (5.7 * Double.valueOf(age.getText().toString()));
-            }else if(wooman.isSelected()){
-                BMR = 447.6 + (9.2 * Double.parseDouble(weight.getText().toString())) + (3.1 * Double.valueOf(height.getText().toString())) - (4.3 * Double.valueOf(age.getText().toString()));
+            if( BMPformule==0) {
+                BMR = 88.36 + (13.4 * Double.parseDouble(weight.getText().toString())) + (4.8 * Double.parseDouble(height.getText().toString())) - (5.7 * Double.parseDouble(age.getText().toString()));
+                Log.d("BMR man",String.valueOf(BMR));
+            }else if(BMPformule==1){
+                BMR = 447.6 + (9.2 * Double.parseDouble(weight.getText().toString())) + (3.1 * Double.parseDouble(height.getText().toString())) - (4.3 * Double.parseDouble(age.getText().toString()));
+                Log.d("BMR wooman",String.valueOf(BMR));
             }
             Math.floor(BMR);
 
-            if((styleOflife.getSelectedItem()).equals("The minimum level")) {
+            if((styleOflife.getSelectedItem()).toString().equals("The minimum level")) {
                 resuliOfCalculationRequarium =	BMR*1.2;
-            }else if((styleOflife.getSelectedItem()).equals("Low")) {
+            }else if((styleOflife.getSelectedItem()).toString().equals("Low")) {
                 resuliOfCalculationRequarium =	BMR*1.375;
-            }else if((styleOflife.getSelectedItem()).equals("Average")) {
+            }else if((styleOflife.getSelectedItem()).toString().equals("Average")) {
                 resuliOfCalculationRequarium =	BMR*1.55;
-            }else if((styleOflife.getSelectedItem()).equals("High")) {
+            }else if((styleOflife.getSelectedItem()).toString().equals("High")) {
                 resuliOfCalculationRequarium =	BMR*1.725;
-            }else if((styleOflife.getSelectedItem()).equals("Very high")) {
+            }else if((styleOflife.getSelectedItem()).toString().equals("Very high")) {
                 resuliOfCalculationRequarium =	BMR*1.9;
             }
             Math.floor(resuliOfCalculationRequarium);
