@@ -32,17 +32,17 @@
                 android:maxHeight="72dp"
                 android:minWidth="260dp" />
 
-            <ImageButton
+            <Button
                 android:id="@+id/btnsearchProduct"
                 style="@style/CaloriesButtons"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="3dp"
+                android:enabled="true"
                 android:layout_marginLeft="5dp"
                 android:layout_weight="0.9"
-                android:src="@drawable/search"
                 android:text="@string/btnSearch"
-                tools:src="@drawable/search" />
+                />
 
         </LinearLayout>
 

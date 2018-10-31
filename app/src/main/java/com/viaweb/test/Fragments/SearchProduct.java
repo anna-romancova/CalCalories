@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -41,7 +42,7 @@ import edu.itstap.calculator.User;
  * A simple {@link Fragment} subclass.
  */
 public class SearchProduct extends Fragment implements View.OnClickListener {
-    private ImageButton search;
+    private Button search;
     private EditText searchNameFood;
     private Calculate cal;
     private RecyclerView recResultProduct;
@@ -55,10 +56,9 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
     private Double weightFoOneProduct;
 
 
-    public boolean updateViews()
+    public void updateViews()
     {
-        boolean b=false;
-        try {
+
             parentrSearch.requestFocus();
             foodArrayList.clear();
             foodArrayList = cal.getUser().getSearchFood();
@@ -66,12 +66,7 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
             mAdapter.notifyDataSetChanged();
             recResultProduct.setAdapter(mAdapter);
             mAdapter.notifyDataSetChanged();
-            return b=true;
-        }catch (Exception e){
-            Log.d("SearchProduct","Something went wrong");
-        }
 
-    return b;
 
     }
 
@@ -222,11 +217,13 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
     private  class SerchAsynckTask extends AsyncTask<String,Void,Void>{
 
 
+        @SuppressLint("ResourceAsColor")
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            search.setFocusableInTouchMode(false);
+
             search.setEnabled(false);
+            search.setClickable(false);
             search.setFocusable(false);
             Log.e("SerchAsynckTask","start");
 
@@ -239,15 +236,16 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
         }
 
 
+        @SuppressLint("ResourceAsColor")
         @Override
         protected void onPostExecute(Void aVoid) {
-            if (updateViews()) {
+                updateViews();
                 searchNameFood.setText("");
                 search.setEnabled(true);
-                search.setFocusableInTouchMode(true);
+                search.setClickable(true);
                 search.setFocusable(true);
                 Log.e("SerchAsynckTask", "stop");
-            }
+
 
         }
     }

@@ -156,7 +156,7 @@ public class UserClient {
         Food searchFood =new Food(nameFood, 0.0, 0.0, 0.0, 0.0);
         this.setUser(us);
         searchFood.setSearch(true);
-        if(this.getUser().getSearchFood().isEmpty()) {
+        if(!this.getUser().getSearchFood().isEmpty()) {
             this.getUser().getSearchFood().clear();
         }
         this.getUser().getSearchFood().add(searchFood);
@@ -176,8 +176,6 @@ public class UserClient {
         }finally {
             closeWriters();
         }
-
-
 
         return us;
     }
