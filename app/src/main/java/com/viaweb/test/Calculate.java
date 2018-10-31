@@ -49,6 +49,7 @@ import com.viaweb.test.Services.ConnectionWithServer;
 import com.viaweb.test.libClasses.ActionsUser;
 import com.viaweb.test.libClasses.UserClient;
 
+import java.net.Socket;
 import java.util.ArrayList;
 
 import edu.itstap.calculator.Food;
@@ -65,6 +66,7 @@ public class Calculate extends AppCompatActivity
     private  String loginString;
     private String passwordString;
     private UserClient userClient;
+    private Socket socket;
 
 
     private EditText nameFoodAdd ;
@@ -205,6 +207,7 @@ public class Calculate extends AppCompatActivity
         tvLoginUsersHeader =navigationView.getHeaderView(0).findViewById(R.id.tvLoginUsersHeader);
 
 
+
     }
 
     public ArrayList<Food> testFood() {
@@ -248,6 +251,14 @@ public class Calculate extends AppCompatActivity
         resultCalor=Math.floor(resultCalor*100)/100.0;
         return new Food(food.getName(), resultCalor, resultProt, resultFats, resultCarb);
 
+    }
+
+    public Socket getSocket() {
+        return socket;
+    }
+
+    public void setSocket(Socket socket) {
+        this.socket = socket;
     }
 
     @Override

@@ -78,6 +78,7 @@ public class UserClient {
         user.setAutorization(false);
 
         try {
+            writers();
             oos.writeObject(user);
             oos.flush();
 
@@ -107,6 +108,7 @@ public class UserClient {
         user.setEmail(email);
 
         try {
+            writers();
             oos.writeObject(user);
             oos.flush();
 
@@ -137,6 +139,7 @@ public class UserClient {
     public boolean addNewFood(User user) {
         boolean add=false;
         try {
+            writers();
             oos.writeObject(user);
             oos.flush();
             add=true;
@@ -192,6 +195,7 @@ public class UserClient {
     public User saveGoalInProfile(User user) {
 
         try {
+            writers();
             oos.writeObject(user);
             oos.flush();
         } catch (IOException e) {
@@ -216,6 +220,7 @@ public class UserClient {
 
     public User updateDataUser(User user) {
         try {
+            writers();
             oos.writeObject(user);
             oos.flush();
         } catch (IOException e) {
@@ -241,6 +246,7 @@ public class UserClient {
     public User saveHistoryMenu(User user) {
 
         try {
+            writers();
             oos.writeObject(user);
             oos.flush();
         } catch (IOException e) {
@@ -267,6 +273,7 @@ public class UserClient {
     public User cleanAllHistory(User user2) {
 
         try {
+            writers();
             oos.writeObject(user2);
             oos.flush();
         } catch (IOException e) {

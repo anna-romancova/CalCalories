@@ -55,16 +55,23 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
     private Double weightFoOneProduct;
 
 
-    public void updateViews()
+    public boolean updateViews()
     {
-        parentrSearch.requestFocus();
-        foodArrayList.clear();
-        foodArrayList = cal.getUser().getSearchFood();
-        mAdapter = new RecyclerAdapterSearchProduct(foodArrayList);
-        mAdapter.notifyDataSetChanged();
-        recResultProduct.setAdapter(mAdapter);
-        mAdapter.notifyDataSetChanged();
+        boolean b=false;
+        try {
+            parentrSearch.requestFocus();
+            foodArrayList.clear();
+            foodArrayList = cal.getUser().getSearchFood();
+            mAdapter = new RecyclerAdapterSearchProduct(foodArrayList);
+            mAdapter.notifyDataSetChanged();
+            recResultProduct.setAdapter(mAdapter);
+            mAdapter.notifyDataSetChanged();
+            return b=true;
+        }catch (Exception e){
+            Log.d("SearchProduct","Something went wrong");
+        }
 
+    return b;
 
     }
 
@@ -181,7 +188,8 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
             if (result == PackageManager.PERMISSION_GRANTED) {
             try {
                 Socket soc=new Socket("10.0.2.2", 6447);
-                UserClient usClient = new UserClient(soc);
+                cal.setSocket(soc);
+                UserClient usClient = new UserClient(cal.getSocket());
                 cal.setUser(usClient.searchFood(searchNameFoodString,cal.getUser()));
             } catch (IOException e) {
                 e.printStackTrace();
@@ -219,6 +227,7 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
             super.onPreExecute();
             search.setFocusableInTouchMode(false);
             search.setEnabled(false);
+            search.setFocusable(false);
             Log.e("SerchAsynckTask","start");
 
         }
@@ -230,13 +239,15 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
         }
 
 
-
         @Override
         protected void onPostExecute(Void aVoid) {
-            updateViews();
-            search.setEnabled(true);
-            search.setFocusableInTouchMode(true);
-            Log.e("SerchAsynckTask","stop");
+            if (updateViews()) {
+                searchNameFood.setText("");
+                search.setEnabled(true);
+                search.setFocusableInTouchMode(true);
+                search.setFocusable(true);
+                Log.e("SerchAsynckTask", "stop");
+            }
 
         }
     }
