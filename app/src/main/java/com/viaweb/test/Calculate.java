@@ -86,7 +86,6 @@ public class Calculate extends AppCompatActivity
     private TextView tvLoginUsersHeader;
 
 
-
     private class SQLiteConnector extends SQLiteOpenHelper {
         private Context context;
 

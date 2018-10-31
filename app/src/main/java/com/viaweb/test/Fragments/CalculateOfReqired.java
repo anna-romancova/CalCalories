@@ -1,9 +1,13 @@
 package com.viaweb.test.Fragments;
 
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,9 +19,14 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.viaweb.test.Calculate;
 import com.viaweb.test.R;
+import com.viaweb.test.libClasses.UserClient;
 
+import java.io.IOException;
+import java.net.Socket;
 import java.util.ArrayList;
 
 
@@ -26,6 +35,7 @@ import java.util.ArrayList;
  */
 public class CalculateOfReqired extends Fragment implements View.OnClickListener,RadioGroup.OnCheckedChangeListener {
     private EditText weight;
+    private Calculate cal;
     private EditText age;
     private EditText height;
     private Spinner styleOflife;
@@ -33,6 +43,7 @@ public class CalculateOfReqired extends Fragment implements View.OnClickListener
     private RadioButton man;
     private RadioButton wooman;
     private Button result;
+    private FloatingActionButton save;
     int BMPformule;
     private TextView tvResult;
     private double resuliOfCalculationRequarium;
@@ -71,8 +82,11 @@ public class CalculateOfReqired extends Fragment implements View.OnClickListener
         tvResult=v.findViewById(R.id.tvResultGoal);
         rGroupGender=v.findViewById(R.id.rGroupGender);
         rGroupGender.setOnCheckedChangeListener(this);
+        save=v.findViewById(R.id.saveInMyProfile);
+        save.setOnClickListener(this);
 
-
+        cal=(Calculate) getActivity();
+        cal.getFab().setVisibility(View.INVISIBLE);
 
         return v;
     }
@@ -83,7 +97,8 @@ public class CalculateOfReqired extends Fragment implements View.OnClickListener
             case R.id.btnGetResultGoal:
                 CalcolateReqwireAsynkTask cal=new CalcolateReqwireAsynkTask();
                 cal.execute();
-
+                break;
+            case R.id.saveInMyProfile:
 
 
                 break;
@@ -144,7 +159,33 @@ public class CalculateOfReqired extends Fragment implements View.OnClickListener
             if(tvResult.getText()!=null){
                 tvResult.setText(" ");
             }
+            cal.getUser().setGoalOfCalories(resuliOfCalculationRequarium);
             tvResult.setText("You need "+String.valueOf(Math.floor(resuliOfCalculationRequarium))+" kcal per day.");
+            save.setVisibility(View.VISIBLE);
+        }
+    }
+    class  SaveInDB extends  AsyncTask<Void,Void,Void>{
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            int result = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.INTERNET);
+            if (result == PackageManager.PERMISSION_GRANTED) {
+                try {
+                    Socket soc=new Socket("10.0.2.2", 6447);
+                    UserClient usClient = new UserClient(soc);
+                    cal.setUser(usClient.saveGoalInProfile(cal.getUser()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            Toast.makeText(getContext(),"@string/informationSaved",Toast.LENGTH_SHORT).show();
         }
     }
 }
