@@ -115,6 +115,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_weight="0.5"
                 android:orientation="horizontal"
+                android:paddingTop="10dp"
                 android:textAlignment="center">
 
                 <Switch
@@ -123,7 +124,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:padding="2dp"
-                    android:text="Add own foods" />
+                    android:text="Save own history and data of own products" />
             </LinearLayout>
 
         </LinearLayout>
@@ -135,37 +136,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="0.2"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingTop="20dp">
 
-        <LinearLayout
+        <Button
+
+            android:id="@+id/btnUpdateDateProfile"
+            style="@style/CaloriesButtons"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="0.5"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/update" />
 
-            <Switch
-                android:id="@+id/switch2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:layout_weight="1"
-                android:text="Save own history" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="0.5"
-            android:orientation="horizontal">
-
-            <Button
-
-                android:id="@+id/btnUpdateDateProfile"
-                style="@style/CaloriesButtons"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/update" />
-        </LinearLayout>
     </LinearLayout>
 
 

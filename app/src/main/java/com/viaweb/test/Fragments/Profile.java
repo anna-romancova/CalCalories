@@ -15,7 +15,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.viaweb.test.Calculate;
@@ -34,6 +36,7 @@ public class Profile extends Fragment implements View.OnClickListener {
     private EditText password;
     private EditText email;
     private Button updateDate;
+    private Switch useSqLite;
 
 
 
@@ -52,6 +55,15 @@ public class Profile extends Fragment implements View.OnClickListener {
         email=v.findViewById(R.id.edEmailUser);
         updateDate=v.findViewById(R.id.btnUpdateDateProfile);
         updateDate.setOnClickListener(this);
+        useSqLite=v.findViewById(R.id.swAddFoods);
+        useSqLite.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                // do something, the isChecked will be
+                // true if the switch is in the On position
+                   cal.getUser().setUseSqLite(isChecked);
+
+            }
+        });
 
         return  v;
     }
