@@ -4,11 +4,16 @@ package com.viaweb.test.Fragments;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.PendingIntent;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -26,6 +31,8 @@ import android.widget.TextView;
 
 import com.viaweb.test.Calculate;
 import com.viaweb.test.R;
+import com.viaweb.test.Services.ConnectionWithServer;
+import com.viaweb.test.libClasses.ActionsUser;
 import com.viaweb.test.libClasses.UserClient;
 
 import java.io.IOException;
@@ -54,6 +61,12 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
     private TextView tvData;
     private   EditText edWeight;
     private Double weightFoOneProduct;
+    private EditText nameFoodAdd ;
+    private EditText protFoodAdd ;
+    private EditText fatsFoodAdd ;
+    private EditText carbFoodAdd ;
+    private FloatingActionButton fab;
+    private EditText calorsFoodAdd;
     ArrayList<ArrayList<FoodInHistory>> ar=new ArrayList<>();
     ArrayList<FoodInHistory>arItem=new ArrayList<>();
 
@@ -149,6 +162,69 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
             }
         }));
 
+        fab = v.findViewById(R.id.fab);
+        if( cal.getUser()!=null) {
+            if (cal.getUser().isAutorization()&&cal.getUser().isUseSqLite()==true)
+                fab.setVisibility(View.VISIBLE);
+        }else{
+            fab.setVisibility(View.INVISIBLE);
+        }
+
+
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar snackbar = Snackbar.make(view, "Add new food", Snackbar.LENGTH_LONG)
+                        .setAction("Add", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                AlertDialog.Builder addFood = new AlertDialog.Builder(getContext());
+                                addFood.setTitle("Add food!");
+                                LayoutInflater inflater = getLayoutInflater();
+                                View vAddFood = inflater.inflate(R.layout.add_food, null, false);
+                                addFood.setView(vAddFood);
+                                addFood.setCancelable(false);
+                                addFood.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Dialog f = (Dialog) dialog;
+                                        nameFoodAdd = f.findViewById(R.id.edNameFood);
+                                        protFoodAdd = f.findViewById(R.id.edProtein);
+                                        fatsFoodAdd = f.findViewById(R.id.edFat);
+                                        carbFoodAdd = f.findViewById(R.id.edCarbohydrate);
+                                        calorsFoodAdd = f.findViewById(R.id.edCalories);
+                                        if (!nameFoodAdd.getText().toString().isEmpty() && !protFoodAdd.getText().toString().isEmpty()
+                                                &&!fatsFoodAdd.getText().toString().isEmpty()
+                                                &&!carbFoodAdd.getText().toString().isEmpty()
+                                                &&!carbFoodAdd.getText().toString().isEmpty()) {
+
+                                            AddFoodsynkTask addFood=new AddFoodsynkTask();
+                                            addFood.execute();
+                                        }
+                                    }
+                                });
+
+                                addFood.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                                AlertDialog adF = addFood.create();
+                                adF.show();
+
+                            }
+                        });
+
+                snackbar.setActionTextColor(getResources().getColor(R.color.white));
+                View snackBarView = snackbar.getView();
+                snackBarView.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                snackbar.show();
+            }
+        });
+
 
 
         return v;
@@ -161,13 +237,21 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
 
     }
 
+ /*   @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if(cal.getUser().isUseSqLite()==true){
+        fab.setVisibility(View.VISIBLE);
+        }else {
+            fab.setVisibility(View.VISIBLE);
+
+        }
+    }*/
+
     @Override
     public void onStart() {
         super.onStart();
-        if( cal.getUser()!=null) {
-            if (cal.getUser().isAutorization())
-                cal.getFab().setVisibility(View.VISIBLE);
-        }
+
     }
     public void searchProduct (String searchNameFoodString) {
 
@@ -252,6 +336,33 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
                 Log.e("SerchAsynckTask", "stop");
 
 
+        }
+    }
+    class  AddFoodsynkTask extends AsyncTask<Void,Void,Void>{
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            ArrayList<Food> newAdd=new ArrayList<>();
+            Food food=new Food(nameFoodAdd.getText().toString(), Double.valueOf(calorsFoodAdd.getText().toString()),
+                    Double.valueOf( protFoodAdd.getText().toString()),
+                    Double.valueOf(fatsFoodAdd.getText().toString()),
+                    Double.valueOf(carbFoodAdd.getText().toString()));
+            food.setAdd(true);
+
+            cal.getUser().getAddFood().add(food);
+            PendingIntent pi = cal.createPendingResult(3, new Intent(), PendingIntent.FLAG_UPDATE_CURRENT);
+            Intent intent = new Intent(getContext(), ConnectionWithServer.class)
+                    .putExtra("user",cal.getUser())
+                    .putExtra("pi", pi)
+                    .setAction(ActionsUser.ADD_FOOD)
+                    .setPackage(cal.getPackageName());
+            int result = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.INTERNET);
+            if (result == PackageManager.PERMISSION_GRANTED) {
+                getContext().startService(intent);
+                Log.d("startService", "startService Add food");
+            }
+
+            return null;
         }
     }
 

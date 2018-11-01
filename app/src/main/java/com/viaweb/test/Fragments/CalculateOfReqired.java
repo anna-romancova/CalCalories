@@ -86,7 +86,6 @@ public class CalculateOfReqired extends Fragment implements View.OnClickListener
         save.setOnClickListener(this);
 
         cal=(Calculate) getActivity();
-        cal.getFab().setVisibility(View.INVISIBLE);
 
         return v;
     }

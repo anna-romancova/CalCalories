@@ -73,7 +73,7 @@ public class Profile extends Fragment implements View.OnClickListener {
             if(!String.valueOf(cal.getUser().getGoalOfCalories()).isEmpty()) {
                 goal.setText(String.valueOf(cal.getUser().getGoalOfCalories()));
             }
-            cal.getFab().setVisibility(View.VISIBLE);
+
         }
     }
 

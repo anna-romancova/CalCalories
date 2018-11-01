@@ -43,7 +43,7 @@ public class ListOfDietProduct extends Fragment implements View.OnClickListener 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        cal.getFab().setVisibility(View.INVISIBLE);
+
     }
 
     @Override

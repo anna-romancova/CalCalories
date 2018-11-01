@@ -69,17 +69,13 @@ public class Calculate extends AppCompatActivity
     private Socket socket;
 
 
-    private EditText nameFoodAdd ;
-    private EditText protFoodAdd ;
-    private EditText fatsFoodAdd ;
-    private EditText carbFoodAdd ;
-    private EditText calorsFoodAdd;
+
     private String emailStr;
 
 
 
 
-    private FloatingActionButton fab;
+
     private DrawerLayout drawer;
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
@@ -142,60 +138,7 @@ public class Calculate extends AppCompatActivity
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
-        fab = findViewById(R.id.fab);
-        fab.setVisibility(View.INVISIBLE);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar snackbar = Snackbar.make(view, "Add new food", Snackbar.LENGTH_LONG)
-                        .setAction("Add", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                AlertDialog.Builder addFood = new AlertDialog.Builder(Calculate.this);
-                                addFood.setTitle("Add food!");
-                                LayoutInflater inflater = getLayoutInflater();
-                                View vAddFood = inflater.inflate(R.layout.add_food, null, false);
-                                addFood.setView(vAddFood);
-                                addFood.setCancelable(false);
-                                addFood.setPositiveButton("Add", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Dialog f = (Dialog) dialog;
-                                         nameFoodAdd = f.findViewById(R.id.edNameFood);
-                                         protFoodAdd = f.findViewById(R.id.edProtein);
-                                         fatsFoodAdd = f.findViewById(R.id.edFat);
-                                         carbFoodAdd = f.findViewById(R.id.edCarbohydrate);
-                                         calorsFoodAdd = f.findViewById(R.id.edCalories);
-                                        if (!nameFoodAdd.getText().toString().isEmpty() && !protFoodAdd.getText().toString().isEmpty()
-                                                &&!fatsFoodAdd.getText().toString().isEmpty()
-                                                &&!carbFoodAdd.getText().toString().isEmpty()
-                                                &&!carbFoodAdd.getText().toString().isEmpty()) {
 
-                                            AddFoodsynkTask addFood=new AddFoodsynkTask();
-                                            addFood.execute();
-                                        }
-                                    }
-                                });
-
-                                addFood.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
-
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                });
-                                AlertDialog adF = addFood.create();
-                                adF.show();
-
-                            }
-                        });
-
-                snackbar.setActionTextColor(getResources().getColor(R.color.white));
-                View snackBarView = snackbar.getView();
-                snackBarView.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                snackbar.show();
-            }
-        });
         drawer = findViewById(R.id.drawer_layout);
         toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -285,11 +228,9 @@ public class Calculate extends AppCompatActivity
             }
             invalidateOptionsMenu();
             if(getUser().isAutorization()){
-                fab.setVisibility(View.VISIBLE);
                 navigationView.getMenu().setGroupVisible(R.id.grAutorisationGroup, true);
                 tvLoginUsersHeader.setText(this.getUser().getUserName()+" Goal:"+this.getUser().getGoalOfCalories());
             }else {
-                fab.setVisibility(View.INVISIBLE);
                 navigationView.getMenu().setGroupVisible(R.id.grAutorisationGroup, false);
                 tvLoginUsersHeader.setText("");
             }
@@ -406,7 +347,6 @@ public class Calculate extends AppCompatActivity
             case R.id.sing_out:
                 this.setUser(new User(""));
                 getUser().setAutorization(false);
-                fab.setVisibility(View.INVISIBLE);
                 navigationView.getMenu().setGroupVisible(R.id.grAutorisationGroup, false);
                 tvLoginUsersHeader.setText("");
                 invalidateOptionsMenu();
@@ -517,15 +457,6 @@ public class Calculate extends AppCompatActivity
 
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if(this.getUser()!=null){
-        if(this.getUser().isAutorization())
-            this.getFab().setVisibility(View.INVISIBLE);
-        }
-    }
-
 
     public void  updateProfile(User user){
         PendingIntent pi = createPendingResult(5, new Intent(), PendingIntent.FLAG_UPDATE_CURRENT);
@@ -616,37 +547,9 @@ public class Calculate extends AppCompatActivity
 
     }
 
-    class  AddFoodsynkTask extends AsyncTask<Void,Void,Void>{
 
-        @Override
-        protected Void doInBackground(Void... voids) {
-            ArrayList<Food> newAdd=new ArrayList<>();
-          Food food=new Food(nameFoodAdd.getText().toString(), Double.valueOf(calorsFoodAdd.getText().toString()),
-                  Double.valueOf( protFoodAdd.getText().toString()),
-                  Double.valueOf(fatsFoodAdd.getText().toString()),
-                  Double.valueOf(carbFoodAdd.getText().toString()));
-            food.setAdd(true);
 
-            getUser().getAddFood().add(food);
-            PendingIntent pi = createPendingResult(3, new Intent(), PendingIntent.FLAG_UPDATE_CURRENT);
-            Intent intent = new Intent(getBaseContext(), ConnectionWithServer.class)
-                    .putExtra("user",getUser())
-                    .putExtra("pi", pi)
-                    .setAction(ActionsUser.ADD_FOOD)
-                    .setPackage(getPackageName());
-            int result = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.INTERNET);
-            if (result == PackageManager.PERMISSION_GRANTED) {
-                getApplicationContext().startService(intent);
-                Log.d("startService", "startService Add food");
-            }
 
-            return null;
-        }
-    }
-
-    public FloatingActionButton getFab() {
-        return fab;
-    }
 
     @Override
     protected void onResumeFragments() {
@@ -654,11 +557,10 @@ public class Calculate extends AppCompatActivity
         invalidateOptionsMenu();
         if(getUser()!=null){
         if(getUser().isAutorization()){
-            fab.setVisibility(View.VISIBLE);
             navigationView.getMenu().setGroupVisible(R.id.grAutorisationGroup, true);
             tvLoginUsersHeader.setText(this.getUser().getUserName()+" Goal:"+this.getUser().getGoalOfCalories());
         }else {
-            fab.setVisibility(View.INVISIBLE);
+
             navigationView.getMenu().setGroupVisible(R.id.grAutorisationGroup, false);
             tvLoginUsersHeader.setText("");
         }
