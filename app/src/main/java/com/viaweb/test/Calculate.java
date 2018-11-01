@@ -62,18 +62,14 @@ public class Calculate extends AppCompatActivity
     private FragmentTransaction ft;
     private SearchProduct searchProduct;
     private ListOfDietProduct tableListProduct;
-    public  static User user;
-    private  String loginString;
+    public static User user;
+    private String loginString;
     private String passwordString;
     private UserClient userClient;
     private Socket socket;
 
 
-
     private String emailStr;
-
-
-
 
 
     private DrawerLayout drawer;
@@ -126,9 +122,9 @@ public class Calculate extends AppCompatActivity
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        FragmentTransaction ft= getSupportFragmentManager().beginTransaction();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 //        ft =  getFragmentManager().beginTransaction();
-        tableListProduct =new ListOfDietProduct() ;
+        tableListProduct = new ListOfDietProduct();
         searchProduct = new SearchProduct();
         ft.replace(R.id.frameContainer, searchProduct);
         ft.commit();
@@ -146,8 +142,7 @@ public class Calculate extends AppCompatActivity
         toggle.syncState();
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        tvLoginUsersHeader =navigationView.getHeaderView(0).findViewById(R.id.tvLoginUsersHeader);
-
+        tvLoginUsersHeader = navigationView.getHeaderView(0).findViewById(R.id.tvLoginUsersHeader);
 
 
     }
@@ -182,15 +177,15 @@ public class Calculate extends AppCompatActivity
     }
 
     public Food calculateOneProduct(Food food, Double d) {
-        d=Math.floor(d*100)/100.0;
-        Double resultProt = (food.getProtein()* 0.01) * d;
-        resultProt=Math.floor(resultProt*100)/100.0;
-        Double resultFats = (food.getFats()* 0.01) * d;
-        resultFats=Math.floor(resultFats*100)/100.0;
-        Double resultCarb = (food.getCarbohydrate()* 0.01) * d;
-        resultCarb=Math.floor(resultCarb*100)/100.0;
-        Double resultCalor = (food.getCalories()* 0.01) * d;
-        resultCalor=Math.floor(resultCalor*100)/100.0;
+        d = Math.floor(d * 100) / 100.0;
+        Double resultProt = (food.getProtein() * 0.01) * d;
+        resultProt = Math.floor(resultProt * 100) / 100.0;
+        Double resultFats = (food.getFats() * 0.01) * d;
+        resultFats = Math.floor(resultFats * 100) / 100.0;
+        Double resultCarb = (food.getCarbohydrate() * 0.01) * d;
+        resultCarb = Math.floor(resultCarb * 100) / 100.0;
+        Double resultCalor = (food.getCalories() * 0.01) * d;
+        resultCalor = Math.floor(resultCalor * 100) / 100.0;
         return new Food(food.getName(), resultCalor, resultProt, resultFats, resultCarb);
 
     }
@@ -212,29 +207,39 @@ public class Calculate extends AppCompatActivity
                     //autor
                     setUser(((User) data.getSerializableExtra("user")));
                     Log.e("autorization aftre user", getUser().toString());
-                    stopService(new Intent(getBaseContext(),ConnectionWithServer.class));
+                    stopService(new Intent(getBaseContext(), ConnectionWithServer.class));
                     break;
                 case 4:
                     //reg
                     setUser(((User) data.getSerializableExtra("user")));
                     Log.e("registration aftre user", getUser().toString());
-                    stopService(new Intent(getBaseContext(),ConnectionWithServer.class));
+                    stopService(new Intent(getBaseContext(), ConnectionWithServer.class));
                     break;
                 case 5:
                     setUser(((User) data.getSerializableExtra("user")));
                     getUser().setProfileUpdate(false);
-                    stopService(new Intent(getBaseContext(),ConnectionWithServer.class));
+                    stopService(new Intent(getBaseContext(), ConnectionWithServer.class));
                     break;
             }
-            invalidateOptionsMenu();
-            if(getUser().isAutorization()){
+
+            if (getUser().isAutorization()) {
                 navigationView.getMenu().setGroupVisible(R.id.grAutorisationGroup, true);
-                tvLoginUsersHeader.setText(this.getUser().getUserName()+" Goal:"+this.getUser().getGoalOfCalories());
-            }else {
+                tvLoginUsersHeader.setText(this.getUser().getUserName() + " Goal:" + this.getUser().getGoalOfCalories());
+                if(getUser().isUseSqLite()) {
+                    navigationView.getMenu().findItem(R.id.nav_my_history).setVisible(true);
+                    navigationView.getMenu().findItem(R.id.nav_my_products).setVisible(true);
+                }else {
+                    navigationView.getMenu().findItem(R.id.nav_my_history).setVisible(false);
+                    navigationView.getMenu().findItem(R.id.nav_my_products).setVisible(false);
+                }
+            } else {
                 navigationView.getMenu().setGroupVisible(R.id.grAutorisationGroup, false);
+                navigationView.getMenu().findItem(R.id.nav_my_history).setVisible(false);
+                navigationView.getMenu().findItem(R.id.nav_my_products).setVisible(false);
                 tvLoginUsersHeader.setText("");
             }
-        }else if(resultCode == 11){
+            invalidateOptionsMenu();
+        } else if (resultCode == 11) {
             switch (requestCode) {
                 case 2:
                     //search food
@@ -246,7 +251,7 @@ public class Calculate extends AppCompatActivity
                     break;
                 case 3:
                     //add prod
-                    stopService(new Intent(getBaseContext(),ConnectionWithServer.class));
+                    stopService(new Intent(getBaseContext(), ConnectionWithServer.class));
                     break;
 
             }
@@ -279,6 +284,7 @@ public class Calculate extends AppCompatActivity
         MenuItem registr = menu.findItem(R.id.registarion);
         MenuItem listProduct = menu.findItem(R.id.list_products_item);
 
+
         if (getUser() != null && getUser().isAutorization()) {
             singOut.setVisible(true);
             singIn.setVisible(false);
@@ -289,9 +295,9 @@ public class Calculate extends AppCompatActivity
             singOut.setVisible(false);
         }
 
-        if(getUser()==null||getUser().getHistoryFoods().isEmpty()){
+        if (getUser() == null || getUser().getHistoryFoods().isEmpty()) {
             listProduct.setVisible(false);
-        }else if(getUser()!=null&&!getUser().getHistoryFoods().isEmpty()){
+        } else if (getUser() != null && !getUser().getHistoryFoods().isEmpty()) {
             listProduct.setVisible(true);
         }
         return true;
@@ -320,8 +326,8 @@ public class Calculate extends AppCompatActivity
                         loginString = login.getText().toString();
                         passwordString = password.getText().toString();
                         if (!loginString.isEmpty() && !passwordString.isEmpty()) {
-                            AutorizationAsynkTask aut=new AutorizationAsynkTask();
-                           aut.execute();
+                            AutorizationAsynkTask aut = new AutorizationAsynkTask();
+                            aut.execute();
 
 
                         }
@@ -351,6 +357,10 @@ public class Calculate extends AppCompatActivity
                 tvLoginUsersHeader.setText("");
                 invalidateOptionsMenu();
 
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.frameContainer, searchProduct);
+                ft.commit();
+
                 break;
             case R.id.registarion:
                 Toast.makeText(this, "registarion", Toast.LENGTH_SHORT).show();
@@ -372,8 +382,8 @@ public class Calculate extends AppCompatActivity
                         loginString = login.getText().toString();
                         passwordString = password.getText().toString();
                         emailStr = email.getText().toString();
-                        if (!loginString.isEmpty() && !passwordString.isEmpty() &&!emailStr.isEmpty()) {
-                            RegistrationAsynkTask reg=new RegistrationAsynkTask();
+                        if (!loginString.isEmpty() && !passwordString.isEmpty() && !emailStr.isEmpty()) {
+                            RegistrationAsynkTask reg = new RegistrationAsynkTask();
                             reg.execute();
                         }
                     }
@@ -396,7 +406,7 @@ public class Calculate extends AppCompatActivity
                 break;
             case R.id.list_products_item:
 
-                getSupportFragmentManager().beginTransaction().replace(R.id.frameContainer,new ListOfDietProduct()).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.frameContainer, new ListOfDietProduct()).commit();
 
                 break;
         }
@@ -409,29 +419,30 @@ public class Calculate extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        switch (id) {
+            case R.id.nav_profile:
 
-        if (id == R.id.nav_profile) {
-            FragmentTransaction  ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.frameContainer, new Profile());
-            ft.commit();
+                ft.replace(R.id.frameContainer, new Profile());
+                ft.commit();
+                break;
+            case R.id.nav_generate:
 
-        } else if (id == R.id.nav_generate) {
-//            onRestart();
-             FragmentTransaction  ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.frameContainer, searchProduct);
-            ft.commit();
-
-        } else if (id == R.id.nav_history) {
-            FragmentTransaction   ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.frameContainer, new MenuHistory());
-            ft.commit();
-
-
-        } else if (id == R.id.nav_calculate) {
-
-            FragmentTransaction  ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.frameContainer, new CalculateOfReqired());
-            ft.commit();
+                ft.replace(R.id.frameContainer, searchProduct);
+                ft.commit();
+                break;
+            case R.id.nav_my_products:
+                ft.replace(R.id.frameContainer, new MenuHistory());
+                ft.commit();
+                break;
+            case R.id.nav_calculate:
+                ft.replace(R.id.frameContainer, new CalculateOfReqired());
+                ft.commit();
+                break;
+            case R.id.nav_my_history:
+                ft.replace(R.id.frameContainer, new MenuHistory());
+                ft.commit();
+                break;
 
 
         }
@@ -458,10 +469,10 @@ public class Calculate extends AppCompatActivity
     }
 
 
-    public void  updateProfile(User user){
+    public void updateProfile(User user) {
         PendingIntent pi = createPendingResult(5, new Intent(), PendingIntent.FLAG_UPDATE_CURRENT);
         Intent intent = new Intent(getApplicationContext(), ConnectionWithServer.class)
-                .putExtra("user",user)
+                .putExtra("user", user)
                 .putExtra("pi", pi)
                 .setAction(ActionsUser.UPDATE_DATA_PROFILE)
                 .setPackage(getPackageName());
@@ -472,7 +483,7 @@ public class Calculate extends AppCompatActivity
         }
     }
 
-    public void searchProduct (String searchNameFoodString) {
+    public void searchProduct(String searchNameFoodString) {
         Log.d("nameFood", searchNameFoodString);
 
         if (!searchNameFoodString.isEmpty()) {
@@ -480,7 +491,7 @@ public class Calculate extends AppCompatActivity
             if (getUser() == null) {
                 user = new User("");
             }
-            if (getUser().getFoods().isEmpty()){
+            if (getUser().getFoods().isEmpty()) {
                 getUser().getFoods().clear();
             }
             PendingIntent pi = createPendingResult(2, new Intent(), PendingIntent.FLAG_UPDATE_CURRENT);
@@ -498,7 +509,8 @@ public class Calculate extends AppCompatActivity
         }
 
     }
-    class  AutorizationAsynkTask extends AsyncTask<Void,Void,Void>{
+
+    class AutorizationAsynkTask extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected Void doInBackground(Void... voids) {
@@ -520,10 +532,9 @@ public class Calculate extends AppCompatActivity
         }
 
 
-
-
     }
-    class  RegistrationAsynkTask extends AsyncTask<Void,Void,Void>{
+
+    class RegistrationAsynkTask extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected Void doInBackground(Void... voids) {
@@ -533,7 +544,7 @@ public class Calculate extends AppCompatActivity
                     .putExtra("login", loginString)
                     .putExtra("password", passwordString)
                     .putExtra("pi", pi)
-                    .putExtra("email",emailStr)
+                    .putExtra("email", emailStr)
                     .setAction(ActionsUser.REGISTRATION)
                     .setPackage(getPackageName());
             int result = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.INTERNET);
@@ -548,22 +559,25 @@ public class Calculate extends AppCompatActivity
     }
 
 
-
-
-
     @Override
     protected void onResumeFragments() {
         super.onResumeFragments();
         invalidateOptionsMenu();
-        if(getUser()!=null){
-        if(getUser().isAutorization()){
-            navigationView.getMenu().setGroupVisible(R.id.grAutorisationGroup, true);
-            tvLoginUsersHeader.setText(this.getUser().getUserName()+" Goal:"+this.getUser().getGoalOfCalories());
-        }else {
-
-            navigationView.getMenu().setGroupVisible(R.id.grAutorisationGroup, false);
-            tvLoginUsersHeader.setText("");
-        }
+        if (getUser() != null) {
+            if (getUser().isAutorization()) {
+                navigationView.getMenu().setGroupVisible(R.id.grAutorisationGroup, true);
+                if(getUser().isUseSqLite()) {
+                    navigationView.getMenu().findItem(R.id.nav_my_history).setVisible(true);
+                    navigationView.getMenu().findItem(R.id.nav_my_products).setVisible(true);
+                }else {
+                    navigationView.getMenu().findItem(R.id.nav_my_history).setVisible(false);
+                    navigationView.getMenu().findItem(R.id.nav_my_products).setVisible(false);
+                }
+                tvLoginUsersHeader.setText(this.getUser().getUserName() + " Goal:" + this.getUser().getGoalOfCalories());
+            } else {
+                navigationView.getMenu().setGroupVisible(R.id.grAutorisationGroup, false);
+                tvLoginUsersHeader.setText("");
+            }
         }
 
     }

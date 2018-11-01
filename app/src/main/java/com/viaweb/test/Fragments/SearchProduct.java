@@ -59,29 +59,27 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
     private ArrayList<Food> foodArrayList;
     private LinearLayout parentrSearch;
     private TextView tvData;
-    private   EditText edWeight;
+    private EditText edWeight;
     private Double weightFoOneProduct;
-    private EditText nameFoodAdd ;
-    private EditText protFoodAdd ;
-    private EditText fatsFoodAdd ;
-    private EditText carbFoodAdd ;
+    private EditText nameFoodAdd;
+    private EditText protFoodAdd;
+    private EditText fatsFoodAdd;
+    private EditText carbFoodAdd;
     private FloatingActionButton fab;
     private EditText calorsFoodAdd;
-    ArrayList<ArrayList<FoodInHistory>> ar=new ArrayList<>();
-    ArrayList<FoodInHistory>arItem=new ArrayList<>();
+    ArrayList<ArrayList<FoodInHistory>> ar = new ArrayList<>();
+    ArrayList<FoodInHistory> arItem = new ArrayList<>();
 
 
+    public void updateViews() {
 
-    public void updateViews()
-    {
-
-            parentrSearch.requestFocus();
-            foodArrayList.clear();
-            foodArrayList = cal.getUser().getSearchFood();
-            mAdapter = new RecyclerAdapterSearchProduct(foodArrayList);
-            mAdapter.notifyDataSetChanged();
-            recResultProduct.setAdapter(mAdapter);
-            mAdapter.notifyDataSetChanged();
+        parentrSearch.requestFocus();
+        foodArrayList.clear();
+        foodArrayList = cal.getUser().getSearchFood();
+        mAdapter = new RecyclerAdapterSearchProduct(foodArrayList);
+        mAdapter.notifyDataSetChanged();
+        recResultProduct.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
 
 
     }
@@ -89,19 +87,20 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
     public SearchProduct() {
         // Required empty public constructor
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v=inflater.inflate(R.layout.fragment_search_product, null);
-        cal=((Calculate) getActivity());
+        View v = inflater.inflate(R.layout.fragment_search_product, null);
+        cal = ((Calculate) getActivity());
 
-        search= v.findViewById(R.id.btnsearchProduct);
+        search = v.findViewById(R.id.btnsearchProduct);
         search.setOnClickListener(this);
         mLayoutManager = new LinearLayoutManager(getContext());
-        recResultProduct= v.findViewById(R.id.list_products);
+        recResultProduct = v.findViewById(R.id.list_products);
         recResultProduct.setLayoutManager(mLayoutManager);
         foodArrayList = new ArrayList<>();
-        foodArrayList =cal.testFood();
+        foodArrayList = cal.testFood();
         mAdapter = new RecyclerAdapterSearchProduct(foodArrayList);
         recResultProduct.setItemAnimator(new DefaultItemAnimator());
         recResultProduct.addItemDecoration(new MyDividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL, 16));
@@ -131,11 +130,9 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         weightFoOneProduct = Double.valueOf(edWeight.getText().toString());
-                        if(!weightFoOneProduct.isNaN()) {
-                            CalculateAsynckTask calculateAsynckTask=new CalculateAsynckTask();
+                        if (!weightFoOneProduct.isNaN()) {
+                            CalculateAsynckTask calculateAsynckTask = new CalculateAsynckTask();
                             calculateAsynckTask.execute();
-
-
 
 
                         }
@@ -163,13 +160,12 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
         }));
 
         fab = v.findViewById(R.id.fab);
-        if( cal.getUser()!=null) {
-            if (cal.getUser().isAutorization()&&cal.getUser().isUseSqLite()==true)
+        if (cal.getUser() != null) {
+            if (cal.getUser().isAutorization() && cal.getUser().isUseSqLite() == true)
                 fab.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             fab.setVisibility(View.INVISIBLE);
         }
-
 
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -195,11 +191,11 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
                                         carbFoodAdd = f.findViewById(R.id.edCarbohydrate);
                                         calorsFoodAdd = f.findViewById(R.id.edCalories);
                                         if (!nameFoodAdd.getText().toString().isEmpty() && !protFoodAdd.getText().toString().isEmpty()
-                                                &&!fatsFoodAdd.getText().toString().isEmpty()
-                                                &&!carbFoodAdd.getText().toString().isEmpty()
-                                                &&!carbFoodAdd.getText().toString().isEmpty()) {
+                                                && !fatsFoodAdd.getText().toString().isEmpty()
+                                                && !carbFoodAdd.getText().toString().isEmpty()
+                                                && !carbFoodAdd.getText().toString().isEmpty()) {
 
-                                            AddFoodsynkTask addFood=new AddFoodsynkTask();
+                                            AddFoodsynkTask addFood = new AddFoodsynkTask();
                                             addFood.execute();
                                         }
                                     }
@@ -226,7 +222,6 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
         });
 
 
-
         return v;
     }
 
@@ -237,15 +232,22 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
 
     }
 
- /*   @Override
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (cal.getUser() != null) {
+            if (cal.getUser().isUseSqLite()) {
+                fab.setVisibility(View.VISIBLE);
+            } else {
+                fab.setVisibility(View.INVISIBLE);
+
+            }
+        }
+    }
+    /*   @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if(cal.getUser().isUseSqLite()==true){
-        fab.setVisibility(View.VISIBLE);
-        }else {
-            fab.setVisibility(View.VISIBLE);
 
-        }
     }*/
 
     @Override
@@ -253,7 +255,8 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
         super.onStart();
 
     }
-    public void searchProduct (String searchNameFoodString) {
+
+    public void searchProduct(String searchNameFoodString) {
 
         Log.d("nameFood", searchNameFoodString);
 
@@ -262,48 +265,45 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
             if (cal.getUser() == null) {
                 cal.setUser(new User(""));
             }
-            if (cal.getUser().getFoods().isEmpty()){
+            if (cal.getUser().getFoods().isEmpty()) {
                 cal.getUser().getFoods().clear();
 
             }
             int result = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.INTERNET);
             if (result == PackageManager.PERMISSION_GRANTED) {
-            try {
-                Socket soc=new Socket("10.0.2.2", 6447);
-                cal.setSocket(soc);
-                UserClient usClient = new UserClient(cal.getSocket());
-                cal.setUser(usClient.searchFood(searchNameFoodString,cal.getUser()));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+                try {
+                    Socket soc = new Socket("10.0.2.2", 6447);
+                    cal.setSocket(soc);
+                    UserClient usClient = new UserClient(cal.getSocket());
+                    cal.setUser(usClient.searchFood(searchNameFoodString, cal.getUser()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
             }
         }
 
     }
-
 
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.btnsearchProduct:
-                if(searchNameFood.getText()!=null){
-                String st=searchNameFood.getText().toString();
-                    SerchAsynckTask asynkTask=new SerchAsynckTask();
+                if (searchNameFood.getText() != null) {
+                    String st = searchNameFood.getText().toString();
+                    SerchAsynckTask asynkTask = new SerchAsynckTask();
                     asynkTask.execute(st);
 
-                }else {
-                    Log.e(cal.TAG,"empty searchNameFood ");
+                } else {
+                    Log.e(cal.TAG, "empty searchNameFood ");
                 }
                 break;
         }
     }
- /*  ;*/
 
 
-
-    private  class SerchAsynckTask extends AsyncTask<String,Void,Void>{
+    private class SerchAsynckTask extends AsyncTask<String, Void, Void> {
 
 
         @SuppressLint("ResourceAsColor")
@@ -314,7 +314,7 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
             search.setEnabled(false);
             search.setClickable(false);
             search.setFocusable(false);
-            Log.e("SerchAsynckTask","start");
+            Log.e("SerchAsynckTask", "start");
 
         }
 
@@ -328,23 +328,24 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
         @SuppressLint("ResourceAsColor")
         @Override
         protected void onPostExecute(Void aVoid) {
-                updateViews();
-                searchNameFood.setText("");
-                search.setEnabled(true);
-                search.setClickable(true);
-                search.setFocusable(true);
-                Log.e("SerchAsynckTask", "stop");
+            updateViews();
+            searchNameFood.setText("");
+            search.setEnabled(true);
+            search.setClickable(true);
+            search.setFocusable(true);
+            Log.e("SerchAsynckTask", "stop");
 
 
         }
     }
-    class  AddFoodsynkTask extends AsyncTask<Void,Void,Void>{
+
+    class AddFoodsynkTask extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            ArrayList<Food> newAdd=new ArrayList<>();
-            Food food=new Food(nameFoodAdd.getText().toString(), Double.valueOf(calorsFoodAdd.getText().toString()),
-                    Double.valueOf( protFoodAdd.getText().toString()),
+            ArrayList<Food> newAdd = new ArrayList<>();
+            Food food = new Food(nameFoodAdd.getText().toString(), Double.valueOf(calorsFoodAdd.getText().toString()),
+                    Double.valueOf(protFoodAdd.getText().toString()),
                     Double.valueOf(fatsFoodAdd.getText().toString()),
                     Double.valueOf(carbFoodAdd.getText().toString()));
             food.setAdd(true);
@@ -352,7 +353,7 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
             cal.getUser().getAddFood().add(food);
             PendingIntent pi = cal.createPendingResult(3, new Intent(), PendingIntent.FLAG_UPDATE_CURRENT);
             Intent intent = new Intent(getContext(), ConnectionWithServer.class)
-                    .putExtra("user",cal.getUser())
+                    .putExtra("user", cal.getUser())
                     .putExtra("pi", pi)
                     .setAction(ActionsUser.ADD_FOOD)
                     .setPackage(cal.getPackageName());
@@ -373,19 +374,19 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
 
     }
 
-    private  class CalculateAsynckTask extends AsyncTask<Void,Void,ArrayList<FoodInHistory>>{
+    private class CalculateAsynckTask extends AsyncTask<Void, Void, ArrayList<FoodInHistory>> {
         @Override
         protected ArrayList<FoodInHistory> doInBackground(Void... voids) {
-            Food foodWithCalculate =cal.calculateOneProduct(foodOfList, weightFoOneProduct);
+            Food foodWithCalculate = cal.calculateOneProduct(foodOfList, weightFoOneProduct);
 
-            Timestamp time= new Timestamp(System.currentTimeMillis());
+            Timestamp time = new Timestamp(System.currentTimeMillis());
 
-            FoodInHistory fH=new FoodInHistory(foodWithCalculate,weightFoOneProduct);
+            FoodInHistory fH = new FoodInHistory(foodWithCalculate, weightFoOneProduct);
             fH.setTime(time);
             arItem.add(fH);
             ar.add(arItem);
             cal.getUser().setHistoryFoods(ar);
-            Log.d(cal.TAG,cal.getUser().toString());
+            Log.d(cal.TAG, cal.getUser().toString());
             return arItem;
         }
 

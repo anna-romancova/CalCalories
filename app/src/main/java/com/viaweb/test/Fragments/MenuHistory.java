@@ -26,6 +26,7 @@ public class MenuHistory extends Fragment {
     private RecyclerView listHistoryMenu;
     private RecyclerView.Adapter mAdapter;
     private LinearLayoutManager mLayoutManager;
+    private ArrayList<FoodInHistory> arrFoodInHist;
 
 
     public MenuHistory() {
@@ -41,7 +42,10 @@ public class MenuHistory extends Fragment {
         mLayoutManager = new LinearLayoutManager(getContext());
         listHistoryMenu.setLayoutManager(mLayoutManager);
         cal=((Calculate) getActivity());
-        mAdapter = new RecyclerAdapterSaveHistory(cal.getUser().getHistoryFoods().get(0),getContext());
+        if(cal.getUser().getHistoryFoods()!=null){
+            arrFoodInHist=cal.getUser().getHistoryFoods().get(0);
+        }
+        mAdapter = new RecyclerAdapterSaveHistory(arrFoodInHist,getContext());
         listHistoryMenu.setItemAnimator(new DefaultItemAnimator());
         listHistoryMenu.addItemDecoration(new MyDividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL, 16));
         listHistoryMenu.setAdapter(mAdapter);

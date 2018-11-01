@@ -11,8 +11,12 @@
             android:icon="@android:drawable/ic_input_get"
             android:title="Profile" />
         <item
-            android:id="@+id/nav_history"
-            android:icon="@drawable/hist"
+            android:id="@+id/nav_my_history"
+            android:icon="@drawable/watch"
+            android:title="History" />
+        <item
+            android:id="@+id/nav_my_products"
+            android:icon="@drawable/myfood"
             android:title="History" />
     </group>
 
