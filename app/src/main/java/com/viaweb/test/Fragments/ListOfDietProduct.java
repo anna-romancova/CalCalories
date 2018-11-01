@@ -6,7 +6,8 @@ import android.os.Bundle;
 
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import  android.support.v4.app.Fragment;
+import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,61 +26,28 @@ import java.util.Date;
 import edu.itstap.calculator.Food;
 import edu.itstap.calculator.FoodInHistory;
 
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.widget.Toast;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class ListOfDietProduct extends Fragment implements View.OnClickListener {
     private Calculate cal;
-    private FloatingActionButton save;
-    TableLayout tl;
+    private FloatingActionButton saveHistory;
+    private RecyclerView recListDiet;
+    private RecyclerView.Adapter mAdapter;
+    private ArrayList<FoodInHistory> foodArrayList;
+    private LinearLayoutManager mLayoutManager;
+    private TextView allResult;
+    private Double proteineDob, fatsDob, carbohydrateDob, caloriesDob;
 
 
     public ListOfDietProduct() {
         // Required empty public constructor
-    }
-    public void addRowTable(){
-        Double proteine=0.0;
-        Double fats=0.0;
-        Double carb=0.0;
-        Double calors=0.0;
-        String t="";
-
-        for( int i=0; i<cal.getUser().getHistoryFoods().size();i++)
-        {
-
-
-          ArrayList<FoodInHistory> fH=  cal.getUser().getHistoryFoods().get(i);
-                for (FoodInHistory food : fH) {
-                    TableRow row = (TableRow) LayoutInflater.from(getContext()).inflate(R.layout.attrib_row, null);
-                    Date d= food.getTime();
-                    SimpleDateFormat formateDate = new SimpleDateFormat("MM-dd");
-                    t= formateDate.format(d);
-                    ((TextView) row.findViewById(R.id.attrib_date)).setText("");
-                    ((TextView) row.findViewById(R.id.attrib_name)).setText(food.getFood().getName());
-                    ((TextView) row.findViewById(R.id.attrib_prot)).setText(String.valueOf(food.getFood().getProtein()));
-                    proteine+=food.getFood().getProtein();
-                    ((TextView) row.findViewById(R.id.attrib_fats)).setText(String.valueOf(food.getFood().getFats()));
-                    fats+=food.getFood().getFats();
-                    ((TextView) row.findViewById(R.id.attrib_carb)).setText(String.valueOf(food.getFood().getCarbohydrate()));
-                    carb+=food.getFood().getCarbohydrate();
-                    ((TextView) row.findViewById(R.id.attrib_calor)).setText(String.valueOf(food.getFood().getCalories()));
-                    calors+=food.getFood().getCalories();
-                    ((TextView) row.findViewById(R.id.attrib_weight)).setText(String.valueOf(food.getWeightFood()));
-                    tl.addView(row);
-                }
-
-        }
-        TableRow row = (TableRow) LayoutInflater.from(getContext()).inflate(R.layout.attrib_row, null);
-        ((TextView) row.findViewById(R.id.attrib_date)).setText(t);
-        ((TextView) row.findViewById(R.id.attrib_name)).setText("All");
-        ((TextView) row.findViewById(R.id.attrib_prot)).setText(String.valueOf(proteine));
-        ((TextView) row.findViewById(R.id.attrib_fats)).setText(String.valueOf(fats));
-        ((TextView) row.findViewById(R.id.attrib_carb)).setText(String.valueOf(carb));
-        ((TextView) row.findViewById(R.id.attrib_calor)).setText(String.valueOf(calors));
-        ((TextView) row.findViewById(R.id.attrib_weight)).setText("");
-        tl.addView(row);
-        tl.requestLayout();
     }
 
     @Override
@@ -91,25 +59,51 @@ public class ListOfDietProduct extends Fragment implements View.OnClickListener 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v=inflater.inflate(R.layout.fragment_list_of_diet_product, container, false);
-
-        save=v.findViewById(R.id.saveHistory);
-        save.setOnClickListener(this);
-
-        tl=v.findViewById(R.id.tableListOfProduct);
-        cal= (Calculate) getActivity();
+        View v = inflater.inflate(R.layout.fragment_list_of_diet_product, container, false);
 
 
-        return v ;
+        cal = (Calculate) getActivity();
+
+        recListDiet = v.findViewById(R.id.recListDiet);
+        foodArrayList = new ArrayList<>();
+        foodArrayList = cal.getUser().getHistoryFoods().get(0);
+        Log.e("foodArrayList", foodArrayList.toString());
+        mAdapter = new RecyclerAdapterSaveHistory(foodArrayList, getContext());
+        mLayoutManager = new LinearLayoutManager(getContext());
+        recListDiet.setLayoutManager(mLayoutManager);
+        recListDiet.addItemDecoration(new MyDividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL, 16));
+        recListDiet.setAdapter(mAdapter);
+        ArrayList<FoodInHistory> arrayListFoodInHistory = cal.getUser().getHistoryFoods().get(0);
+        allResult = v.findViewById(R.id.tvAllResult);
+        proteineDob = 0.0;
+        fatsDob = 0.0;
+        carbohydrateDob = 0.0;
+        caloriesDob = 0.0;
+        for (int i = 0; i < arrayListFoodInHistory.size(); i++) {
+            proteineDob += arrayListFoodInHistory.get(i).getFood().getProtein();
+            fatsDob += arrayListFoodInHistory.get(i).getFood().getFats();
+            carbohydrateDob += arrayListFoodInHistory.get(i).getFood().getCarbohydrate();
+            caloriesDob += arrayListFoodInHistory.get(i).getFood().getCalories();
+
+        }
+        allResult.setText("Result:\n Proteines :" + String.valueOf((Math.floor(proteineDob))) + ";\n Fats:" +
+                String.valueOf((Math.floor(fatsDob))) + ";\n Carbohydrates:"
+                + String.valueOf((Math.floor(carbohydrateDob))) + "; \nCalories:" + String.valueOf((Math.floor(caloriesDob))));
+
+        saveHistory = v.findViewById(R.id.saveHistory);
+        saveHistory.setOnClickListener(this);
+        if(cal.getUser().isUseSqLite()){
+            saveHistory.setVisibility(View.VISIBLE);
+        }
+
+        return v;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        cal= (Calculate) getActivity();
-        if(!cal.getUser().getHistoryFoods().isEmpty()){
-            addRowTable();
-        }
+        cal = (Calculate) getActivity();
+
     }
 
     @Override
@@ -128,13 +122,15 @@ public class ListOfDietProduct extends Fragment implements View.OnClickListener 
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.saveHistory:
+
 
                 break;
         }
     }
-    private  class SaveHistoryAsynckTask extends AsyncTask<Void,Void,Void> {
+
+    private class SaveHistoryAsynckTask extends AsyncTask<Void, Void, Void> {
 
 
         @Override

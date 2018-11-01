@@ -41,7 +41,7 @@ public class MenuHistory extends Fragment {
         mLayoutManager = new LinearLayoutManager(getContext());
         listHistoryMenu.setLayoutManager(mLayoutManager);
         cal=((Calculate) getActivity());
-        mAdapter = new RecyclerAdapterSaveHistory(cal.getUser().getHistoryFoods());
+        mAdapter = new RecyclerAdapterSaveHistory(cal.getUser().getHistoryFoods().get(0),getContext());
         listHistoryMenu.setItemAnimator(new DefaultItemAnimator());
         listHistoryMenu.addItemDecoration(new MyDividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL, 16));
         listHistoryMenu.setAdapter(mAdapter);

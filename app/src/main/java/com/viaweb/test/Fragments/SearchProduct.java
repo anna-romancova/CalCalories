@@ -54,6 +54,9 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
     private TextView tvData;
     private   EditText edWeight;
     private Double weightFoOneProduct;
+    ArrayList<ArrayList<FoodInHistory>> ar=new ArrayList<>();
+    ArrayList<FoodInHistory>arItem=new ArrayList<>();
+
 
 
     public void updateViews()
@@ -212,6 +215,8 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
                 break;
         }
     }
+ /*  ;*/
+
 
 
     private  class SerchAsynckTask extends AsyncTask<String,Void,Void>{
@@ -250,26 +255,40 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
         }
     }
 
-    private  class CalculateAsynckTask extends AsyncTask<Void,Void,Void>{
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+
+    }
+
+    private  class CalculateAsynckTask extends AsyncTask<Void,Void,ArrayList<FoodInHistory>>{
         @Override
-        protected Void doInBackground(Void... voids) {
+        protected ArrayList<FoodInHistory> doInBackground(Void... voids) {
             Food foodWithCalculate =cal.calculateOneProduct(foodOfList, weightFoOneProduct);
 
             Timestamp time= new Timestamp(System.currentTimeMillis());
 
             FoodInHistory fH=new FoodInHistory(foodWithCalculate,weightFoOneProduct);
             fH.setTime(time);
-            ArrayList<FoodInHistory> ar=new ArrayList<>();
-            ar.add(fH);
-            cal.getUser().getHistoryFoods().add(ar);
+            arItem.add(fH);
+            ar.add(arItem);
+            cal.getUser().setHistoryFoods(ar);
             Log.d(cal.TAG,cal.getUser().toString());
-            return null;
+            return arItem;
         }
 
         @Override
+        protected void onPostExecute(ArrayList<FoodInHistory> arItem) {
+            cal.invalidateOptionsMenu();
+
+        }
+        /* @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             cal.invalidateOptionsMenu();
-        }
+
+        }*/
     }
+
 }

@@ -1,58 +1,126 @@
 package com.viaweb.test.Fragments;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import com.viaweb.test.Calculate;
 import com.viaweb.test.R;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+
 import edu.itstap.calculator.FoodInHistory;
 
-public class RecyclerAdapterSaveHistory  extends RecyclerView.Adapter<RecyclerAdapterSaveHistory.MyViewHolder> {
+public class RecyclerAdapterSaveHistory extends RecyclerView.Adapter<RecyclerAdapterSaveHistory.MyViewHolder> {
 
-private ArrayList<ArrayList<FoodInHistory>> foodList;
+    private ArrayList<FoodInHistory> foodList;
+    String dateStr, proteineStr, fatsStr, carbohydratestr, caloriesStr;
 
-public class MyViewHolder extends RecyclerView.ViewHolder {
-    public TextView name, protein, fats, carbohydrate, calories;
+    SimpleDateFormat simpleDateFormat;
+    private Context mCtx;
 
-    public MyViewHolder(View view) {
-        super(view);
-        name =  view.findViewById(R.id.tvNameFood);
-        protein =  view.findViewById(R.id.tvProtein);
-        fats =  view.findViewById(R.id.tvFat);
-        carbohydrate =  view.findViewById(R.id.tvCargoh);
-        calories = view.findViewById(R.id.tvCalories);
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+        public TextView name, protein, fats, carbohydrate, calories, date, buttonViewOption ,weight;
 
+
+        public MyViewHolder(View view) {
+            super(view);
+            date = view.findViewById(R.id.tvDateListHisroty);
+            name = view.findViewById(R.id.tvNameListHisroty);
+            protein = view.findViewById(R.id.tvHistoryProtein);
+            fats = view.findViewById(R.id.tvHistoryFat);
+            carbohydrate = view.findViewById(R.id.tvHistoryCargoh);
+            calories = view.findViewById(R.id.tvHistoryCalories);
+            buttonViewOption = view.findViewById(R.id.textViewOptions);
+            weight= view.findViewById(R.id.tvHistoryWeight);
+
+        }
     }
-}
 
 
-    public RecyclerAdapterSaveHistory(ArrayList<ArrayList<FoodInHistory>> foodList) {
+    public RecyclerAdapterSaveHistory(ArrayList<FoodInHistory> foodList, Context mCtx) {
         this.foodList = foodList;
+        Log.e("foodList size", String.valueOf(foodList.size()));
+        this.mCtx = mCtx;
     }
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.result_search_product, parent, false);
-        // set the view's size, margins, paddings and layout parameters
+                .inflate(R.layout.item_of_list_history, parent, false);
+
         MyViewHolder vh = new MyViewHolder(v);
         return vh;
     }
 
+ /*   private void calculateOfDay(ArrayList<FoodInHistory> food) {
+        for (int i = 0; i < food.size(); i++) {
+            dateStr = food.get(i).getTime().toString();
+
+        }
+
+    }*/
+
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
-        ArrayList<FoodInHistory> food = foodList.get(position);
-      /*  holder.name.setText(food.getName());
-        holder.protein.setText(String.valueOf(food.getProtein()));
-        holder.fats.setText(String.valueOf(food.getFats()));
-        holder.carbohydrate.setText(String.valueOf(food.getCarbohydrate()));
-        holder.calories.setText(String.valueOf(food.getCalories()));*/
+    public void onBindViewHolder(final MyViewHolder holder, int position) {
+        ArrayList<FoodInHistory> food = foodList;
+
+
+        Date d = food.get(position).getTime();
+        SimpleDateFormat formateDate = new SimpleDateFormat("MM-dd");
+        dateStr = formateDate.format(d);
+
+        holder.date.setText(dateStr);
+        holder.name.setText(food.get(position).getFood().getName());
+        holder.protein.setText(String.valueOf(food.get(position).getFood().getProtein()));
+        holder.fats.setText(String.valueOf(food.get(position).getFood().getFats()));
+        holder.carbohydrate.setText(String.valueOf(food.get(position).getFood().getCarbohydrate()));
+        holder.calories.setText(String.valueOf(food.get(position).getFood().getCalories()));
+        holder.weight.setText(String.valueOf(food.get(position).getWeightFood()));
+
+        holder.buttonViewOption.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                //creating a popup menu
+                PopupMenu popup = new PopupMenu(mCtx, holder.buttonViewOption);
+                //inflating menu from xml resource
+                popup.inflate(R.menu.options_menu);
+                //adding click listener
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.item_delete:
+                                //handle menu1 click
+                                return true;
+                            case R.id.item_update:
+                                //handle menu2 click
+                                return true;
+                            default:
+                                return false;
+                        }
+                    }
+                });
+                //displaying the popup
+                popup.show();
+
+            }
+        });
+
     }
+
+
 
     @Override
     public int getItemCount() {

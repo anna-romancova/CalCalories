@@ -17,6 +17,7 @@
     <string name="btnSearch">Search</string>
     <string name="registration">Registarion</string>
     <string name="weight">weight</string>
+    <string name="weightTitle">Weight: </string>
     <string name="nameTitle">Name: </string>
     <string name="proteinTitle">Protein: </string>
     <string name="fatTitle">Fat: </string>
@@ -43,5 +44,6 @@
     <string name="informationSaved">Information has been saved</string>
     <string name="haight_sm">Haight(sm)</string>
     <string name="weight_kg">Weight(kg)</string>
+    <string name="delete">Delete</string>
 
 </resources>
