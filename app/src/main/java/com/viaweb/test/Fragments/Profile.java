@@ -1,16 +1,11 @@
 package com.viaweb.test.Fragments;
 
 
-import android.Manifest;
-import android.app.PendingIntent;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,8 +17,7 @@ import android.widget.Toast;
 
 import com.viaweb.test.Calculate;
 import com.viaweb.test.R;
-import com.viaweb.test.Services.ConnectionWithServer;
-import com.viaweb.test.libClasses.ActionsUser;
+
 
 
 /**
@@ -51,6 +45,7 @@ public class Profile extends Fragment implements View.OnClickListener {
         View v=inflater.inflate(R.layout.fragment_profile, container, false);
         login=v.findViewById(R.id.edNaneUser);
         goal=v.findViewById(R.id.edGoalUser);
+        cal=(Calculate)getActivity();
         password=v.findViewById(R.id.edPasswordUser);
         email=v.findViewById(R.id.edEmailUser);
         updateDate=v.findViewById(R.id.btnUpdateDateProfile);
@@ -58,8 +53,7 @@ public class Profile extends Fragment implements View.OnClickListener {
         useSqLite=v.findViewById(R.id.swAddFoods);
         useSqLite.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                // do something, the isChecked will be
-                // true if the switch is in the On position
+
                    cal.getUser().setUseSqLite(isChecked);
 
             }
@@ -71,11 +65,11 @@ public class Profile extends Fragment implements View.OnClickListener {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        cal=(Calculate) getActivity();
         if(cal.getUser().isAutorization()){
             login.setText(cal.getUser().getUserName());
             password.setText(cal.getUser().getPassword());
             email.setText(cal.getUser().getEmail());
+            useSqLite.setChecked(cal.getUser().isUseSqLite());
             if(!String.valueOf(cal.getUser().getGoalOfCalories()).isEmpty()) {
                 goal.setText(String.valueOf(cal.getUser().getGoalOfCalories()));
             }
