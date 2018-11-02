@@ -80,11 +80,11 @@ public class SQLiteConnector extends SQLiteOpenHelper {
     /*select*/
 
     /*all*/
-    public User selectAllHistory(User user) {
+    public Cursor selectAllHistory() {
         SQLiteDatabase db = this.getReadableDatabase();
-        String selectQuery = "select * from historyMenu where user=" + user.getId();
+        String selectQuery = "select * from historyMenu ";
         Cursor c = db.rawQuery(selectQuery, null);
-        ArrayList<ArrayList<FoodInHistory>> allHistory = new ArrayList<>();
+       /* ArrayList<ArrayList<FoodInHistory>> allHistory = new ArrayList<>();
         Gson gs = new Gson();
         if (c.moveToFirst()) {
             do {
@@ -94,9 +94,9 @@ public class SQLiteConnector extends SQLiteOpenHelper {
                 allHistory.add(fHistory);
                 user.setHistoryFoods(allHistory);
             } while (c.moveToNext());
-        }
+        }*/
 
-        return user;
+        return c;
     }
 
     public User selectHistoryWithTime(String fromtime, String totime, User user) {
@@ -122,10 +122,15 @@ public class SQLiteConnector extends SQLiteOpenHelper {
 
 
     /*delete*/
-    public void cleanHistory(User user) {
+    public void cleanHistory() {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete("historyMenu", "user" + " = ?",
-                new String[]{String.valueOf(user.getId())});
+        db.delete("historyMenu", null,
+                null);
+    }
+    public void cleanOneHistory(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete("historyMenu", "_id",
+                new String[]{String.valueOf(id)});
     }
 
 

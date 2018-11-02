@@ -16,7 +16,7 @@ import com.viaweb.test.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SimpleCursorRecyclerAdapter extends CursorRecyclerAdapter<SimpleViewHolder> implements View.OnCreateContextMenuListener  {
+public class SimpleCursorRecyclerAdapter extends CursorRecyclerAdapter<SimpleViewHolder> implements View.OnCreateContextMenuListener {
 
     private int mLayout;
     private int[] mFrom;
@@ -27,13 +27,11 @@ public class SimpleCursorRecyclerAdapter extends CursorRecyclerAdapter<SimpleVie
     private int position;
 
 
-
-
-    public SimpleCursorRecyclerAdapter (int layout, Cursor c, String[] from, int[] to) {
+    public SimpleCursorRecyclerAdapter(int layout, Cursor c, String[] from, int[] to) {
         super(c);
         mLayout = layout;
         mTo = to;
-        cursor=c;
+        cursor = c;
         mOriginalFrom = from;
         findColumns(c, from);
 
@@ -41,29 +39,25 @@ public class SimpleCursorRecyclerAdapter extends CursorRecyclerAdapter<SimpleVie
 
 
     @Override
-    public SimpleViewHolder onCreateViewHolder (ViewGroup parent, int viewType) {
+    public SimpleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(mLayout, parent, false);
-        context=parent.getContext();
+        context = parent.getContext();
 
         v.setOnCreateContextMenuListener(this);
         return new SimpleViewHolder(v, mTo);
     }
 
 
-
-
-
     @Override
-    public void onBindViewHolder ( SimpleViewHolder holder, Cursor cursor) {
+    public void onBindViewHolder(SimpleViewHolder holder, Cursor cursor) {
         final int count = mTo.length;
         final int[] from = mFrom;
-        final SimpleViewHolder hol=holder;
+        final SimpleViewHolder hol = holder;
+            for (int i = 0; i < count; i++) {
+                holder.views[i].setText(cursor.getString(from[i]));
 
-        for (int i = 0; i < count; i++) {
-            holder.views[i].setText(cursor.getString(from[i]));
         }
-
 
 
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -108,7 +102,7 @@ public class SimpleCursorRecyclerAdapter extends CursorRecyclerAdapter<SimpleVie
      * Create a map from an array of strings to an array of column-id integers in cursor c.
      * If c is null, the array will be discarded.
      *
-     * @param c the cursor to find the columns from
+     * @param c    the cursor to find the columns from
      * @param from the Strings naming the columns of interest
      */
     private void findColumns(Cursor c, String[] from) {
@@ -154,27 +148,23 @@ public class SimpleCursorRecyclerAdapter extends CursorRecyclerAdapter<SimpleVie
     }
 }
 
-class SimpleViewHolder extends RecyclerView.ViewHolder
-{
+class SimpleViewHolder extends RecyclerView.ViewHolder {
 
     public TextView[] views;
     public TextView buttonViewOption;
 
 
-
-    public SimpleViewHolder (View itemView, int[] to)
-    {
+    public SimpleViewHolder(View itemView, int[] to) {
         super(itemView);
         views = new TextView[to.length];
         buttonViewOption = itemView.findViewById(R.id.tvOptionsFoods);
 
 
-        for(int i = 0 ; i < to.length ; i++) {
+        for (int i = 0; i < to.length; i++) {
             views[i] = (TextView) itemView.findViewById(to[i]);
         }
 
     }
-
 
 
 }
