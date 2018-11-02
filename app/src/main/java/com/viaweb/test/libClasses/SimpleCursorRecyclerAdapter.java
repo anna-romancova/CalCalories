@@ -3,6 +3,7 @@ package com.viaweb.test.libClasses;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -43,8 +44,13 @@ public class SimpleCursorRecyclerAdapter extends CursorRecyclerAdapter<SimpleVie
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(mLayout, parent, false);
         context = parent.getContext();
+        if(parent.getId()==R.id.recListOwnFoods){
+            v.setOnCreateContextMenuListener(this);
+        }
 
-        v.setOnCreateContextMenuListener(this);
+
+
+
         return new SimpleViewHolder(v, mTo);
     }
 

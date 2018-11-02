@@ -41,13 +41,13 @@ public class OwnHistory extends Fragment  implements View.OnClickListener {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v= inflater.inflate(R.layout.fragment_own_history, container, false);
         recListOfHistory=v.findViewById(R.id.recListOwnHistory);
         int[] view= new int[] {R.id.tvIdHistoreUser,R.id.tvDateHistoryUser};
-        String[] cols=new String[]{"_id","Date"};
+        final String[] cols=new String[]{"_id","Date"};
         adapter=new SimpleCursorRecyclerAdapter(R.layout.one_item_only_date,null,cols,view);
         mLayoutManager = new LinearLayoutManager(getContext());
         recListOfHistory.setLayoutManager(mLayoutManager);
@@ -66,10 +66,17 @@ public class OwnHistory extends Fragment  implements View.OnClickListener {
             @Override
             public void onClick(View view, int position) {
               Toast.makeText(getContext(),"short click",Toast.LENGTH_LONG).show();
+
+
             }
             @Override
             public void onLongClick(View view, int position) {
-                Toast.makeText(getContext(),"Long click",Toast.LENGTH_LONG).show();
+//                Toast.makeText(getContext(),"Long click"+position,Toast.LENGTH_LONG).show();
+                connector.cleanOneHistory(position);
+                result =connector.selectAllHistory();
+                if(result !=null){
+                    adapter.changeCursor(result);
+                }
             }
         }));
         return v ;

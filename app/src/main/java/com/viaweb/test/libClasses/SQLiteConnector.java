@@ -129,7 +129,7 @@ public class SQLiteConnector extends SQLiteOpenHelper {
     }
     public void cleanOneHistory(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete("historyMenu", "_id",
+        db.delete("historyMenu", "_id=?",
                 new String[]{String.valueOf(id)});
     }
 
