@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import com.viaweb.test.R;
 
 import java.util.ArrayList;
 
+import edu.itstap.calculator.Food;
 import edu.itstap.calculator.FoodInHistory;
 
 
@@ -27,6 +29,7 @@ public class MenuHistory extends Fragment {
     private RecyclerView.Adapter mAdapter;
     private LinearLayoutManager mLayoutManager;
     private ArrayList<FoodInHistory> arrFoodInHist;
+    private ArrayList<FoodInHistory> foodArrayListNew;
 
 
     public MenuHistory() {
@@ -42,17 +45,21 @@ public class MenuHistory extends Fragment {
         mLayoutManager = new LinearLayoutManager(getContext());
         listHistoryMenu.setLayoutManager(mLayoutManager);
         cal=((Calculate) getActivity());
-        if(cal.getUser().getHistoryFoods()!=null){
-            arrFoodInHist=cal.getUser().getHistoryFoods().get(0);
+        arrFoodInHist=new ArrayList<>();
+        foodArrayListNew=new ArrayList<>();
+        arrFoodInHist=OwnHistory.currentListOfNextFragment;
+        Log.e("arrFoodInHist",arrFoodInHist.toString());
+        for (int i = 0; i < arrFoodInHist.size(); i++) {
+            Food newFood= cal.calculateOneProduct(arrFoodInHist.get(i).getFood(),arrFoodInHist.get(i).getWeightFood());
+            FoodInHistory fd=  new FoodInHistory(newFood,arrFoodInHist.get(i).getWeightFood());
+            fd.setTime(arrFoodInHist.get(i).getTime());
+            foodArrayListNew.add(fd);
+
         }
         mAdapter = new RecyclerAdapterSaveHistory(arrFoodInHist,getContext());
         listHistoryMenu.setItemAnimator(new DefaultItemAnimator());
         listHistoryMenu.addItemDecoration(new MyDividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL, 16));
         listHistoryMenu.setAdapter(mAdapter);
-
-
-
-
         return  v;
     }
 

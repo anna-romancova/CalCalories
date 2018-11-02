@@ -98,6 +98,24 @@ public class SQLiteConnector extends SQLiteOpenHelper {
 
         return c;
     }
+    public ArrayList<ArrayList<FoodInHistory>> selectOneHistory(int id ){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selectQuery = "select * from historyMenu Where _id="+id;
+        Cursor c = db.rawQuery(selectQuery, null);
+          ArrayList<ArrayList<FoodInHistory>> allHistory = new ArrayList<>();
+        Gson gs = new Gson();
+        if (c.moveToFirst()) {
+            do {
+                Type type = new TypeToken<ArrayList<FoodInHistory>>() {
+                }.getType();
+                ArrayList<FoodInHistory> fHistory = gs.fromJson((c.getString(c.getColumnIndex("menu"))), type);
+                allHistory.add(fHistory);
+
+            } while (c.moveToNext());
+        }
+       return allHistory;
+
+    }
 
     public User selectHistoryWithTime(String fromtime, String totime, User user) {
         SQLiteDatabase db = this.getReadableDatabase();
