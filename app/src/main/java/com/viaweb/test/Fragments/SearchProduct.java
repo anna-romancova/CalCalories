@@ -207,7 +207,7 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
                                                     Double.valueOf(fatsFoodAdd.getText().toString()),
                                                     Double.valueOf(carbFoodAdd.getText().toString()));
                                             connector = new SQLiteConnector(getContext(), "OwnData", 1);
-                                            Log.e("connector", connector.toString());
+//                                            Log.e("connector", connector.toString());
                                             connector.insertFood(food);
 
                                             Toast.makeText(getContext(), "Your product have been add!", Toast.LENGTH_SHORT).show();
@@ -337,7 +337,7 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
             search.setEnabled(false);
             search.setClickable(false);
             search.setFocusable(false);
-            Log.e("SerchAsynckTask", "start");
+//            Log.e("SerchAsynckTask", "start");
 
         }
 
@@ -357,7 +357,7 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
             search.setEnabled(true);
             search.setClickable(true);
             search.setFocusable(true);
-            Log.e("SerchAsynckTask", "stop");
+//            Log.e("SerchAsynckTask", "stop");
 
 
         }

@@ -162,7 +162,7 @@ public class UserClient {
             this.getUser().getSearchFood().clear();
         }
         this.getUser().getSearchFood().add(searchFood);
-        Log.e("before search  food", this.getUser().toString());
+//        Log.e("before search  food", this.getUser().toString());
         try {
             writers();
             oos.writeObject(this.getUser());
