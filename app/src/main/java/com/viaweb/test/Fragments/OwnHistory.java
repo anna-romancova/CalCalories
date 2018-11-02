@@ -73,7 +73,7 @@ public class OwnHistory extends Fragment implements View.OnClickListener {
         recListOfHistory.addOnItemTouchListener(new RecyclerTouchListener(getContext(), recListOfHistory, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
-                Log.e("short click", "" + (position + 1));
+//                Log.e("short click", "" + (position + 1));
                 TextView idTv = ((TextView) view.findViewById(R.id.tvIdHistoreUser));
                 int id = Integer.parseInt(idTv.getText().toString());
                 currentListOfNextFragment = connector.selectOneHistory(id).get(0);

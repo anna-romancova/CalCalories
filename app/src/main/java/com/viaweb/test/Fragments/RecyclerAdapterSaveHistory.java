@@ -54,7 +54,7 @@ public class RecyclerAdapterSaveHistory extends RecyclerView.Adapter<RecyclerAda
 
     public RecyclerAdapterSaveHistory(ArrayList<FoodInHistory> foodList, Context mCtx) {
         this.foodList = foodList;
-        Log.e("foodList size", String.valueOf(foodList.size()));
+//        Log.e("foodList size", String.valueOf(foodList.size()));
         this.mCtx = mCtx;
     }
     @Override

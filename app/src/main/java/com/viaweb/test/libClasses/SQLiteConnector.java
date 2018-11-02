@@ -26,7 +26,7 @@ public class SQLiteConnector extends SQLiteOpenHelper {
                            int version) {
         super(context, name, null, version);
         this.context = context;
-       Log.e("Connector","DB has been connected");
+//       Log.e("Connector","DB has been connected");
         // TODO Auto-generated constructor stub
     }
 

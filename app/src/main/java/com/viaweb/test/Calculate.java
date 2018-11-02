@@ -177,13 +177,13 @@ public class Calculate extends AppCompatActivity
                 case 1:
                     //autor
                     setUser(((User) data.getSerializableExtra("user")));
-                    Log.e("autorization aftre user", getUser().toString());
+//                    Log.e("autorization aftre user", getUser().toString());
                     stopService(new Intent(getBaseContext(), ConnectionWithServer.class));
                     break;
                 case 4:
                     //reg
                     setUser(((User) data.getSerializableExtra("user")));
-                    Log.e("registration aftre user", getUser().toString());
+//                    Log.e("registration aftre user", getUser().toString());
                     stopService(new Intent(getBaseContext(), ConnectionWithServer.class));
                     break;
                 case 5:
