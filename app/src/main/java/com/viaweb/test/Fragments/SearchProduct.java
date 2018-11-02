@@ -33,6 +33,7 @@ import com.viaweb.test.Calculate;
 import com.viaweb.test.R;
 import com.viaweb.test.Services.ConnectionWithServer;
 import com.viaweb.test.libClasses.ActionsUser;
+import com.viaweb.test.libClasses.SQLiteConnector;
 import com.viaweb.test.libClasses.UserClient;
 
 import java.io.IOException;
@@ -62,6 +63,7 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
     private EditText edWeight;
     private Double weightFoOneProduct;
     private EditText nameFoodAdd;
+    private SQLiteConnector connector;
     private EditText protFoodAdd;
     private EditText fatsFoodAdd;
     private EditText carbFoodAdd;
@@ -379,11 +381,11 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
     private class CalculateAsynckTask extends AsyncTask<Void, Void, ArrayList<FoodInHistory>> {
         @Override
         protected ArrayList<FoodInHistory> doInBackground(Void... voids) {
-            Food foodWithCalculate = cal.calculateOneProduct(foodOfList, weightFoOneProduct);
+
 
             Timestamp time = new Timestamp(System.currentTimeMillis());
 
-            FoodInHistory fH = new FoodInHistory(foodWithCalculate, weightFoOneProduct);
+            FoodInHistory fH = new FoodInHistory(foodOfList, weightFoOneProduct);
             fH.setTime(time);
             arItem.add(fH);
             ar.add(arItem);

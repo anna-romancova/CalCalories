@@ -3,6 +3,7 @@ package com.viaweb.test.Fragments;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,13 +21,17 @@ import java.util.Date;
 
 import edu.itstap.calculator.FoodInHistory;
 
-public class RecyclerAdapterSaveHistory extends RecyclerView.Adapter<RecyclerAdapterSaveHistory.MyViewHolder> {
+public class RecyclerAdapterSaveHistory extends RecyclerView.Adapter<RecyclerAdapterSaveHistory.MyViewHolder>
+        implements View.OnCreateContextMenuListener{
 
     private ArrayList<FoodInHistory> foodList;
     String dateStr, proteineStr, fatsStr, carbohydratestr, caloriesStr;
 
     SimpleDateFormat simpleDateFormat;
     private Context mCtx;
+    private int position;
+
+
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView name, protein, fats, carbohydrate, calories, date, buttonViewOption ,weight;
@@ -52,24 +57,32 @@ public class RecyclerAdapterSaveHistory extends RecyclerView.Adapter<RecyclerAda
         Log.e("foodList size", String.valueOf(foodList.size()));
         this.mCtx = mCtx;
     }
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        menu.add(0, v.getId(), 0, "Update");
+        menu.add(0, v.getId(), 0, "Delete");
+
+    }
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_of_list_history, parent, false);
+        v.setOnCreateContextMenuListener(this);
 
         MyViewHolder vh = new MyViewHolder(v);
         return vh;
     }
 
- /*   private void calculateOfDay(ArrayList<FoodInHistory> food) {
-        for (int i = 0; i < food.size(); i++) {
-            dateStr = food.get(i).getTime().toString();
-
-        }
-
-    }*/
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
@@ -87,8 +100,15 @@ public class RecyclerAdapterSaveHistory extends RecyclerView.Adapter<RecyclerAda
         holder.carbohydrate.setText(String.valueOf(food.get(position).getFood().getCarbohydrate()));
         holder.calories.setText(String.valueOf(food.get(position).getFood().getCalories()));
         holder.weight.setText(String.valueOf(food.get(position).getWeightFood()));
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                setPosition(holder.getAdapterPosition());
+                return false;
+            }
+        });
 
-        holder.buttonViewOption.setOnClickListener(new View.OnClickListener() {
+     /*   holder.buttonViewOption.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -117,7 +137,7 @@ public class RecyclerAdapterSaveHistory extends RecyclerView.Adapter<RecyclerAda
 
             }
         });
-
+*/
     }
 
 

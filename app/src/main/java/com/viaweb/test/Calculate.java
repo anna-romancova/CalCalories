@@ -71,6 +71,7 @@ public class Calculate extends AppCompatActivity
     private UserClient userClient;
     private Socket socket;
 
+
     private SQLiteConnector connector;
     private SQLiteDatabase db;
 
