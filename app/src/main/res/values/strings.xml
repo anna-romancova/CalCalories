@@ -45,5 +45,7 @@
     <string name="haight_sm">Haight(sm)</string>
     <string name="weight_kg">Weight(kg)</string>
     <string name="delete">Delete</string>
+    <string name="own_menu">Own menu</string>
+    <string name="own_history">Own history</string>
 
 </resources>

@@ -43,10 +43,13 @@ import android.widget.Toast;
 import com.viaweb.test.Fragments.CalculateOfReqired;
 import com.viaweb.test.Fragments.ListOfDietProduct;
 import com.viaweb.test.Fragments.MenuHistory;
+import com.viaweb.test.Fragments.OwmMenu;
+import com.viaweb.test.Fragments.OwnHistory;
 import com.viaweb.test.Fragments.Profile;
 import com.viaweb.test.Fragments.SearchProduct;
 import com.viaweb.test.Services.ConnectionWithServer;
 import com.viaweb.test.libClasses.ActionsUser;
+import com.viaweb.test.libClasses.SQLiteConnector;
 import com.viaweb.test.libClasses.UserClient;
 
 import java.net.Socket;
@@ -68,6 +71,9 @@ public class Calculate extends AppCompatActivity
     private UserClient userClient;
     private Socket socket;
 
+    private SQLiteConnector connector;
+    private SQLiteDatabase db;
+
 
     private String emailStr;
 
@@ -77,42 +83,6 @@ public class Calculate extends AppCompatActivity
     private NavigationView navigationView;
     private TextView tvLoginUsersHeader;
 
-
-    private class SQLiteConnector extends SQLiteOpenHelper {
-        private Context context;
-
-        public SQLiteConnector(Context context, String name,
-                               int version) {
-            super(context, name, null, version);
-            this.context = context;
-            Toast.makeText(context, "DB has been connected", Toast.LENGTH_SHORT).show();
-            // TODO Auto-generated constructor stub
-        }
-
-        @Override
-        public void onCreate(SQLiteDatabase db) {
-            db.execSQL("Create table historyFoods(_id integer primary key autoincrement,menu nvarchar(255));");
-            db.execSQL("Create table myFoods(_id integer primary key autoincrement,menu nvarchar(255));");
-
-            Toast.makeText(context, "DB has been created", Toast.LENGTH_SHORT).show();
-
-
-        }
-
-        @Override
-        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
-            if (oldVersion == 1 && newVersion == 2) {
-
-            } else if (oldVersion == 2 && newVersion == 3) {
-
-            } else if (oldVersion == 1 && newVersion == 3) {
-
-            }
-
-        }
-
-    }
 
 
     @Override
@@ -432,7 +402,7 @@ public class Calculate extends AppCompatActivity
                 ft.commit();
                 break;
             case R.id.nav_my_products:
-                ft.replace(R.id.frameContainer, new MenuHistory());
+                ft.replace(R.id.frameContainer, new OwmMenu());
                 ft.commit();
                 break;
             case R.id.nav_calculate:
@@ -440,7 +410,7 @@ public class Calculate extends AppCompatActivity
                 ft.commit();
                 break;
             case R.id.nav_my_history:
-                ft.replace(R.id.frameContainer, new MenuHistory());
+                ft.replace(R.id.frameContainer, new OwnHistory());
                 ft.commit();
                 break;
 

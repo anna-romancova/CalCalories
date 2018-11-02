@@ -13,11 +13,11 @@
         <item
             android:id="@+id/nav_my_history"
             android:icon="@drawable/watch"
-            android:title="History" />
+            android:title="@string/own_history" />
         <item
             android:id="@+id/nav_my_products"
             android:icon="@drawable/myfood"
-            android:title="History" />
+            android:title="@string/own_menu" />
     </group>
 
     <item android:title="General">

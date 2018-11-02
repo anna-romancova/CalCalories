@@ -65,8 +65,8 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
     private EditText protFoodAdd;
     private EditText fatsFoodAdd;
     private EditText carbFoodAdd;
-    private FloatingActionButton fab;
     private EditText calorsFoodAdd;
+    private FloatingActionButton fab;
     ArrayList<ArrayList<FoodInHistory>> ar = new ArrayList<>();
     ArrayList<FoodInHistory> arItem = new ArrayList<>();
 
@@ -193,7 +193,7 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
                                         if (!nameFoodAdd.getText().toString().isEmpty() && !protFoodAdd.getText().toString().isEmpty()
                                                 && !fatsFoodAdd.getText().toString().isEmpty()
                                                 && !carbFoodAdd.getText().toString().isEmpty()
-                                                && !carbFoodAdd.getText().toString().isEmpty()) {
+                                                && !calorsFoodAdd.getText().toString().isEmpty()) {
 
                                             AddFoodsynkTask addFood = new AddFoodsynkTask();
                                             addFood.execute();

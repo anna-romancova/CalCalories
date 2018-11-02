@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/row_padding_vertical"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingBottom="@dimen/row_padding_vertical">
+
+    <TextView
+        android:id="@+id/tvIdFood"
+        android:layout_width="0dip"
+        android:layout_height="0dip"
+        android:text=" "/>
+
+
+
+
+    <TextView
+        android:id="@+id/tvName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="2dp"
+        android:text="@string/name"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/tvNameOfList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/tvCalories"
+
+        android:layout_marginStart="-67dp"
+        android:layout_marginTop="6dp"
+        android:text="text" />
+
+
+    <TextView
+        android:id="@+id/tvProt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/tvCarb"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="5dp"
+        android:text="@string/proteinTitle"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/tvProteinOfList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_alignStart="@+id/tvNameOfList"
+        android:layout_marginTop="37dp"
+        android:text="text" />
+
+
+    <TextView
+        android:id="@+id/tvFats"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/tvProt"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="73dp"
+        android:text="@string/fat"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/tvFatOfList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/tvNameOfList"
+        android:layout_alignTop="@+id/tvFats"
+        android:layout_marginTop="0dp"
+        android:text="text" />
+
+
+    <TextView
+        android:id="@+id/tvCarb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="103dp"
+        android:text="@string/carbohydrateTitle"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/tvCargohOfList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/tvCarb"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="1dp"
+        android:layout_marginEnd="63dp"
+        android:text="text" />
+
+    <TextView
+        android:id="@+id/tvCalories"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/tvCarb"
+        android:layout_alignTop="@+id/tvFats"
+        android:layout_marginStart="5dp"
+        android:text="@string/caloriesTitle"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/tvCaloriesOfList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvCargohOfList"
+        android:layout_alignStart="@+id/tvCargohOfList"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="23dp"
+        android:text="text" />
+</RelativeLayout>
