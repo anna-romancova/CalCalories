@@ -49,7 +49,7 @@ import edu.itstap.calculator.User;
  * A simple {@link Fragment} subclass.
  */
 public class SearchProduct extends Fragment implements View.OnClickListener {
-    private Button search;
+    private ImageButton search;
     private EditText searchNameFood;
     private Calculate cal;
     private RecyclerView recResultProduct;
@@ -272,7 +272,8 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
             int result = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.INTERNET);
             if (result == PackageManager.PERMISSION_GRANTED) {
                 try {
-                    Socket soc = new Socket("10.0.2.2", 6447);
+//                    Socket soc = new Socket("10.0.2.2", 6447);
+                    Socket soc = new Socket("192.168.1.235", 6489);
                     cal.setSocket(soc);
                     UserClient usClient = new UserClient(cal.getSocket());
                     cal.setUser(usClient.searchFood(searchNameFoodString, cal.getUser()));

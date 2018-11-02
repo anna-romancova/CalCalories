@@ -171,7 +171,9 @@ public class CalculateOfReqired extends Fragment implements View.OnClickListener
             int result = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.INTERNET);
             if (result == PackageManager.PERMISSION_GRANTED) {
                 try {
-                    Socket soc=new Socket("10.0.2.2", 6447);
+//                    Socket soc=new Socket("10.0.2.2", 6447);
+//                    Socket soc=new Socket("192.168.1.235", 6489);
+                    Socket soc=new Socket("192.168.31.116", 6489);
                     UserClient usClient = new UserClient(soc);
                     cal.getUser().setInsertGoal(true);
                     cal.getUser().setGoalOfCalories((Math.floor(resuliOfCalculationRequarium)));

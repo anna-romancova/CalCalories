@@ -1,166 +1,223 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?android:attr/selectableItemBackground"
     android:clickable="true"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/row_padding_vertical"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingBottom="@dimen/row_padding_vertical">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.2"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tvDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/date"
-        android:textColor="@color/black" />
-
-    <TextView
-        android:id="@+id/tvDateListHisroty"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        android:layout_alignTop="@+id/tvDate"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="92dp"
-        android:text="text" />
-
-    <TextView
-        android:id="@+id/tvName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/tvCarb"
-        android:layout_alignTop="@+id/tvDate"
-        android:layout_marginStart="3dp"
-        android:layout_marginTop="2dp"
-        android:text="@string/name"
-        android:textColor="@color/black" />
-
-    <TextView
-        android:id="@+id/tvNameListHisroty"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/tvCalories"
-        android:layout_alignTop="@+id/tvDate"
-        android:layout_marginStart="112dp"
-        android:layout_marginTop="6dp"
-        android:text="text" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_weight="0.5"
+                >
 
 
-    <TextView
-        android:id="@+id/tvProt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/tvDate"
-        android:layout_alignTop="@+id/tvCarb"
-        android:layout_marginStart="2dp"
-        android:text="@string/proteinTitle"
-        android:textColor="@color/black" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.25"
+                    android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/tvHistoryProtein"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+                    <TextView
+                        android:id="@+id/tvDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.5"
+                        android:text="@string/date"
+                        android:textColor="@color/black" />
 
-        android:layout_alignStart="@+id/tvProt"
-        android:layout_alignTop="@+id/tvDateListHisroty"
-        android:layout_marginStart="94dp"
-        android:layout_marginTop="37dp"
-        android:text="text" />
+                    <TextView
+                        android:id="@+id/tvDateListHisroty"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.5"
+                        android:text="text" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.25"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tvName"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.5"
+                        android:text="@string/name"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/tvNameListHisroty"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.5"
+                        android:text="text" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.25"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tvProt"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.5"
+                        android:text="@string/proteinTitle"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/tvHistoryProtein"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.5"
+                        android:text="text" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.25"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tvFats"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.5"
+                        android:text="@string/fat"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/tvHistoryFat"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.5"
+                        android:text="text" />
+
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_weight="0.5"
+                >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.25"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tvWeight"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.5"
+                        android:text="@string/weightTitle"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/tvHistoryWeight"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.5"
+                        android:text="text" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.25"
+                    android:orientation="horizontal"></LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.25"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tvCarb"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.5"
+                        android:text="@string/carbohydrate"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/tvHistoryCargoh"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.5"
+                        android:text="text" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.25"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tvCalories"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.5"
+                        android:text="@string/caloriesTitle"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/tvHistoryCalories"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.5"
+                        android:text="text" />
+                </LinearLayout>
+            </LinearLayout>
 
 
-    <TextView
-        android:id="@+id/tvFats"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/tvProt"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="73dp"
-        android:text="@string/fat"
-        android:textColor="@color/black" />
+        </LinearLayout>
 
-    <TextView
-        android:id="@+id/tvHistoryFat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/tvDateListHisroty"
-        android:layout_alignTop="@+id/tvFats"
-        android:text="text" />
+    </LinearLayout>
 
-
-    <TextView
-        android:id="@+id/tvCarb"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/tvDateListHisroty"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="103dp"
-        android:text="@string/carbohydrateTitle"
-        android:textColor="@color/black" />
-
-    <TextView
-        android:id="@+id/tvHistoryCargoh"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/tvHistoryCalories"
-        android:layout_alignTop="@+id/tvCarb"
-        android:layout_marginTop="0dp"
-        android:text="text" />
-
-    <TextView
-        android:id="@+id/tvCalories"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/tvCarb"
-        android:layout_alignTop="@+id/tvFats"
-        android:layout_marginStart="2dp"
-        android:layout_marginTop="-19dp"
-        android:text="@string/caloriesTitle"
-        android:textColor="@color/black" />
-
-    <TextView
-        android:id="@+id/tvHistoryCalories"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        android:layout_below="@+id/tvDate"
-        android:layout_alignStart="@+id/tvNameListHisroty"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="34dp"
-        android:text="text" />
-
-    <TextView
-        android:id="@+id/tvWeight"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvHistoryCalories"
-        android:layout_alignStart="@+id/tvName"
-        android:layout_marginStart="0dp"
-        android:text="@string/weightTitle"
-        android:textColor="@color/black" />
-
-    <TextView
-        android:id="@+id/tvHistoryWeight"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/tvHistoryCargoh"
-        android:layout_alignTop="@+id/tvFats"
-        android:layout_marginStart="1dp"
-        android:text="text" />
-    <TextView
-        android:id="@+id/textViewOptions"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:text="&#8942;"
-        android:textAppearance="?android:textAppearanceLarge" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.8"
+        android:orientation="vertical">
+            <TextView
+                android:id="@+id/textViewOptions"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clickable="true"
+                android:text="&#8942;"
+                android:textAppearance="?android:textAppearanceLarge" />
+    </LinearLayout>
 
 
-
-</RelativeLayout>
+</LinearLayout>
