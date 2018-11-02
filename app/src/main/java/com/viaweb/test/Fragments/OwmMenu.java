@@ -11,7 +11,10 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -20,6 +23,7 @@ import com.viaweb.test.R;
 import com.viaweb.test.libClasses.SQLiteConnector;
 import com.viaweb.test.libClasses.SimpleCursorRecyclerAdapter;
 import android.support.design.widget.FloatingActionButton;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -72,7 +76,7 @@ public class OwmMenu extends Fragment implements View.OnClickListener {
         recFoods.setItemAnimator(new DefaultItemAnimator());
         recFoods.addItemDecoration(new MyDividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL, 16));
         recFoods.setAdapter(adapter);
-        recFoods.addOnItemTouchListener(new RecyclerTouchListener(getContext(), recFoods, new RecyclerTouchListener.ClickListener() {
+    /*    recFoods.addOnItemTouchListener(new RecyclerTouchListener(getContext(), recFoods, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(final View view, int position) {
 
@@ -155,7 +159,8 @@ public class OwmMenu extends Fragment implements View.OnClickListener {
                     adapter.changeCursor(result);
                 }
             }
-        }));
+        }));*/
+        registerForContextMenu(recFoods);
         connector=new SQLiteConnector(getContext(),"OwnData",1);
         result =connector.selectAllFoods();
         if(result !=null){
@@ -165,6 +170,103 @@ public class OwmMenu extends Fragment implements View.OnClickListener {
         addOwnFood.setOnClickListener(this);
 
         return v;
+    }
+
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+
+        int position = -1;
+        try {
+            position = ((SimpleCursorRecyclerAdapter)recFoods.getAdapter()).getPosition();
+        } catch (Exception e) {
+            Log.d("onContextItemSelected", e.getLocalizedMessage(), e);
+            return super.onContextItemSelected(item);
+        }
+        View view = mLayoutManager.findViewByPosition(position);
+//        int index = position;
+        if(item.getTitle()=="Update"){
+            name=((TextView) view.findViewById(R.id.tvNameOfList)).getText().toString();
+            prot =((TextView) view.findViewById(R.id.tvProteinOfList)).getText().toString();
+            fats =((TextView) view.findViewById(R.id.tvFatOfList)).getText().toString();
+            carb =((TextView) view.findViewById(R.id.tvCargohOfList)).getText().toString();
+            calories =((TextView) view.findViewById(R.id.tvCaloriesOfList)).getText().toString();
+
+//                Toast.makeText(getContext(),name.getText().toString(),Toast.LENGTH_SHORT).show();
+            AlertDialog.Builder upFood = new AlertDialog.Builder(getContext());
+            upFood.setTitle("Update food!");
+            LayoutInflater inflater = getLayoutInflater();
+            View vUpFood = inflater.inflate(R.layout.add_food, null, false);
+//                View na=vUpFood.findViewById(R.id.edNameFood);
+            nameFoodAdd =vUpFood.findViewById(R.id.edNameFood);
+//                View pr=vUpFood.findViewById(R.id.edProtein);
+            protFoodAdd = vUpFood.findViewById(R.id.edProtein);
+//                View fa= vUpFood.findViewById(R.id.edFat);
+            fatsFoodAdd = vUpFood.findViewById(R.id.edFat);
+//                View car=vUpFood.findViewById(R.id.edCarbohydrate);
+            carbFoodAdd = vUpFood.findViewById(R.id.edCarbohydrate);
+//                View calori= vUpFood.findViewById(R.id.edCalories);
+            calorsFoodAdd =vUpFood.findViewById(R.id.edCalories);
+            nameFoodAdd.setText(name);
+            protFoodAdd.setText(prot);
+            fatsFoodAdd.setText(fats);
+            carbFoodAdd.setText(carb);
+            calorsFoodAdd.setText(calories);
+            upFood.setView(vUpFood);
+            upFood.setCancelable(false);
+            upFood.setPositiveButton("Update", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Dialog f = (Dialog) dialog;
+                    EditText nameFoodAdd = f.findViewById(R.id.edNameFood);
+                    EditText protFoodAdd = f.findViewById(R.id.edProtein);
+                    EditText fatsFoodAdd = f.findViewById(R.id.edFat);
+                    EditText carbFoodAdd = f.findViewById(R.id.edCarbohydrate);
+                    EditText calorsFoodAdd = f.findViewById(R.id.edCalories);
+
+                    if (!nameFoodAdd.getText().toString().isEmpty() && !protFoodAdd.getText().toString().isEmpty()
+                            && !fatsFoodAdd.getText().toString().isEmpty()
+                            && !carbFoodAdd.getText().toString().isEmpty()
+                            && !calorsFoodAdd.getText().toString().isEmpty()) {
+
+                        connector.updateFood(new Food(nameFoodAdd.getText().toString(),
+                                Double.parseDouble(calorsFoodAdd.getText().toString()),
+                                Double.parseDouble(protFoodAdd.getText().toString()),
+                                Double.parseDouble(fatsFoodAdd.getText().toString()),
+                                Double.parseDouble(carbFoodAdd.getText().toString())));
+
+                    }
+
+                    result= connector.selectAllFoods();
+                    if(result !=null){
+                        adapter.changeCursor(result);
+                    }
+                }
+            });
+
+            upFood.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            AlertDialog upF = upFood.create();
+            upF.show();
+
+        }
+        else if(item.getTitle()=="Delete"){
+            id =Integer.valueOf(((TextView)view.findViewById(R.id.tvIdFood)).getText().toString());
+            connector.deleteFood(id);
+            result= connector.selectAllFoods();
+            if(result !=null){
+                adapter.changeCursor(result);
+            }
+
+        }
+        else {return false;}
+        return true;
+
     }
 
     public void updateViews() {
@@ -179,6 +281,7 @@ public class OwmMenu extends Fragment implements View.OnClickListener {
 
 
     }
+
 
     @Override
     public void onClick(View view) {

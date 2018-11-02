@@ -273,7 +273,8 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
             if (result == PackageManager.PERMISSION_GRANTED) {
                 try {
 //                    Socket soc = new Socket("10.0.2.2", 6447);
-                    Socket soc = new Socket("192.168.1.235", 6489);
+//                    Socket soc = new Socket("192.168.1.235", 6489);
+                    Socket soc = new Socket("192.168.31.116", 6489);
                     cal.setSocket(soc);
                     UserClient usClient = new UserClient(cal.getSocket());
                     cal.setUser(usClient.searchFood(searchNameFoodString, cal.getUser()));
