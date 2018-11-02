@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -25,7 +26,7 @@ public class SQLiteConnector extends SQLiteOpenHelper {
                            int version) {
         super(context, name, null, version);
         this.context = context;
-        Toast.makeText(context, "DB has been connected", Toast.LENGTH_SHORT).show();
+       Log.e("Connector","DB has been connected");
         // TODO Auto-generated constructor stub
     }
 
@@ -174,7 +175,7 @@ public class SQLiteConnector extends SQLiteOpenHelper {
     /*one*/
     public ArrayList<Food> selectFoods(String name) {
         SQLiteDatabase db = this.getReadableDatabase();
-        String selectQuery = "select * from foods where name Like " + name;
+        String selectQuery = "select * from foods where name Like '%" + name+"%'";
         Cursor c = db.rawQuery(selectQuery, null);
         ArrayList<Food> resultist = new ArrayList<>();
 

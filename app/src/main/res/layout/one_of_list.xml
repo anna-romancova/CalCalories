@@ -1,36 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:layout_width="match_parent"
-android:layout_height="wrap_content"
-android:background="?android:attr/selectableItemBackground"
-android:clickable="true"
-android:orientation="horizontal"
-android:paddingLeft="@dimen/activity_horizontal_margin"
-android:paddingTop="@dimen/row_padding_vertical"
-android:paddingRight="@dimen/activity_horizontal_margin"
-android:paddingBottom="@dimen/row_padding_vertical">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:orientation="horizontal"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/row_padding_vertical"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingBottom="@dimen/row_padding_vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="0dp"
         android:layout_weight="0.1"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_margin="0dp"
             android:layout_weight="1.0"
             android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_margin="0dp"
                 android:layout_weight="0.5"
                 android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_margin="0dp"
                     android:layout_weight="0.33"
                     android:orientation="horizontal">
 
@@ -60,6 +64,7 @@ android:paddingBottom="@dimen/row_padding_vertical">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_margin="0dp"
                     android:layout_weight="0.34"
                     android:orientation="horizontal">
 
@@ -84,6 +89,7 @@ android:paddingBottom="@dimen/row_padding_vertical">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_margin="0dp"
                     android:layout_weight="0.33"
                     android:orientation="horizontal">
 
@@ -109,6 +115,7 @@ android:paddingBottom="@dimen/row_padding_vertical">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_margin="0dp"
                 android:layout_weight="0.5"
                 android:orientation="vertical">
 
@@ -116,12 +123,14 @@ android:paddingBottom="@dimen/row_padding_vertical">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_margin="0dp"
                     android:layout_weight="0.33"
                     android:orientation="horizontal"></LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_margin="0dp"
                     android:layout_weight="0.34"
                     android:orientation="horizontal">
 
@@ -146,6 +155,7 @@ android:paddingBottom="@dimen/row_padding_vertical">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_margin="0dp"
                     android:layout_weight="0.33"
                     android:orientation="horizontal">
 
@@ -175,6 +185,7 @@ android:paddingBottom="@dimen/row_padding_vertical">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="0dp"
         android:layout_weight="0.9"
         android:orientation="vertical">
 

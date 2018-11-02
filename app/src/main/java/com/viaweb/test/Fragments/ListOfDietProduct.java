@@ -219,8 +219,8 @@ public class ListOfDietProduct extends Fragment implements View.OnClickListener 
                long l= connector.saveHistoryMenu(cal.getUser());
                 Toast.makeText(getContext(),"Save your history",Toast.LENGTH_SHORT).show();
                 cal.getUser().getHistoryFoods().clear();
-                updateTextResult();
-                UpdateView();
+                cal.invalidateOptionsMenu();
+
                 break;
         }
     }

@@ -33,7 +33,7 @@ public class ConnectionWithServer extends Service {
 //        userClient = new UserClient("10.0.2.2", 6447);
         try {
 //            userClient = new UserClient( new Socket("10.0.2.2", 6447));
-            Socket soc=new Socket("192.168.31.116", 6489);
+            Socket soc=new Socket("192.168.1.235", 6489);
 //            Socket soc=new Socket("192.168.31.116", 6489);
             userClient = new UserClient( soc);
         } catch (IOException e) {

@@ -28,6 +28,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.viaweb.test.Calculate;
 import com.viaweb.test.R;
@@ -62,8 +63,9 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
     private TextView tvData;
     private EditText edWeight;
     private Double weightFoOneProduct;
-    private EditText nameFoodAdd;
     private SQLiteConnector connector;
+    private EditText nameFoodAdd;
+
     private EditText protFoodAdd;
     private EditText fatsFoodAdd;
     private EditText carbFoodAdd;
@@ -163,8 +165,9 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
 
         fab = v.findViewById(R.id.fab);
         if (cal.getUser() != null) {
-            if (cal.getUser().isAutorization() && cal.getUser().isUseSqLite() == true)
+            if (cal.getUser().isAutorization() && cal.getUser().isUseSqLite())
                 fab.setVisibility(View.VISIBLE);
+            connector = new SQLiteConnector(getContext(), "OwnData", 1);
         } else {
             fab.setVisibility(View.INVISIBLE);
         }
@@ -197,8 +200,18 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
                                                 && !carbFoodAdd.getText().toString().isEmpty()
                                                 && !calorsFoodAdd.getText().toString().isEmpty()) {
 
-                                            AddFoodsynkTask addFood = new AddFoodsynkTask();
-                                            addFood.execute();
+                                    /*        AddFoodsynkTask addFood = new AddFoodsynkTask();
+                                            addFood.execute();*/
+                                            Food food = new Food(nameFoodAdd.getText().toString(), Double.valueOf(calorsFoodAdd.getText().toString()),
+                                                    Double.valueOf(protFoodAdd.getText().toString()),
+                                                    Double.valueOf(fatsFoodAdd.getText().toString()),
+                                                    Double.valueOf(carbFoodAdd.getText().toString()));
+                                            connector = new SQLiteConnector(getContext(), "OwnData", 1);
+                                            Log.e("connector", connector.toString());
+                                            connector.insertFood(food);
+
+                                            Toast.makeText(getContext(), "Your product have been add!", Toast.LENGTH_SHORT).show();
+
                                         }
                                     }
                                 });
@@ -276,10 +289,16 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
                 try {
 //                    Socket soc = new Socket("10.0.2.2", 6447);
 //                    Socket soc = new Socket("192.168.1.235", 6489);
-                    Socket soc = new Socket("192.168.31.116", 6489);
+                    Socket soc = new Socket("192.168.1.235", 6489);
                     cal.setSocket(soc);
                     UserClient usClient = new UserClient(cal.getSocket());
-                    cal.setUser(usClient.searchFood(searchNameFoodString, cal.getUser()));
+                    User us=usClient.searchFood(searchNameFoodString, cal.getUser());
+                    if(cal.getUser().isUseSqLite()){
+                        connector= new SQLiteConnector(getContext(), "OwnData", 1);
+                      ArrayList<Food>foodsFromSqLite=  connector.selectFoods(searchNameFoodString);
+                        us.getSearchFood().addAll(foodsFromSqLite);
+                    }
+                    cal.setUser(us);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -324,7 +343,8 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
 
         @Override
         protected Void doInBackground(String... params) {
-            searchProduct(params[0]);
+                searchProduct(params[0]);
+
             return null;
         }
 
@@ -347,7 +367,7 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            ArrayList<Food> newAdd = new ArrayList<>();
+          /*  ArrayList<Food> newAdd = new ArrayList<>();
             Food food = new Food(nameFoodAdd.getText().toString(), Double.valueOf(calorsFoodAdd.getText().toString()),
                     Double.valueOf(protFoodAdd.getText().toString()),
                     Double.valueOf(fatsFoodAdd.getText().toString()),
@@ -365,9 +385,21 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
             if (result == PackageManager.PERMISSION_GRANTED) {
                 getContext().startService(intent);
                 Log.d("startService", "startService Add food");
-            }
+            }*/
+            Food food = new Food(nameFoodAdd.getText().toString(), Double.valueOf(calorsFoodAdd.getText().toString()),
+                    Double.valueOf(protFoodAdd.getText().toString()),
+                    Double.valueOf(fatsFoodAdd.getText().toString()),
+                    Double.valueOf(carbFoodAdd.getText().toString()));
+            Log.e("connector", connector.toString());
+            connector.insertFood(food);
+
 
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            Toast.makeText(getContext(), "Your product have been add!", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -399,12 +431,7 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
             cal.invalidateOptionsMenu();
 
         }
-        /* @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            cal.invalidateOptionsMenu();
 
-        }*/
     }
 
 }
