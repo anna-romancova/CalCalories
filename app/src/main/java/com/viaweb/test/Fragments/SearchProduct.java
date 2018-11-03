@@ -259,6 +259,10 @@ public class SearchProduct extends Fragment implements View.OnClickListener {
             }
         }
     }
+
+    public FloatingActionButton getFab() {
+        return fab;
+    }
     /*   @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);

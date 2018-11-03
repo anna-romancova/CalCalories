@@ -327,6 +327,7 @@ public class Calculate extends AppCompatActivity
                 navigationView.getMenu().setGroupVisible(R.id.grAutorisationGroup, false);
                 tvLoginUsersHeader.setText("");
                 invalidateOptionsMenu();
+                searchProduct.getFab().setVisibility(View.INVISIBLE);
 
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.frameContainer, searchProduct);
