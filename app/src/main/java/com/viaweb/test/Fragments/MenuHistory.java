@@ -48,7 +48,7 @@ public class MenuHistory extends Fragment {
         arrFoodInHist=new ArrayList<>();
         foodArrayListNew=new ArrayList<>();
         arrFoodInHist=OwnHistory.currentListOfNextFragment;
-        Log.e("arrFoodInHist",arrFoodInHist.toString());
+//        Log.e("arrFoodInHist",arrFoodInHist.toString());
         for (int i = 0; i < arrFoodInHist.size(); i++) {
             Food newFood= cal.calculateOneProduct(arrFoodInHist.get(i).getFood(),arrFoodInHist.get(i).getWeightFood());
             FoodInHistory fd=  new FoodInHistory(newFood,arrFoodInHist.get(i).getWeightFood());

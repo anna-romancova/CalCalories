@@ -42,7 +42,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.5"
                 android:text="text"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:textSize="10sp" />
         </LinearLayout>
 
     </LinearLayout>

@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -216,10 +217,14 @@ public class ListOfDietProduct extends Fragment implements View.OnClickListener 
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.saveHistory:
-               long l= connector.saveHistoryMenu(cal.getUser());
+               connector.saveHistoryMenu(cal.getUser());
                 Toast.makeText(getContext(),"Save your history",Toast.LENGTH_SHORT).show();
                 cal.getUser().getHistoryFoods().clear();
+
                 cal.invalidateOptionsMenu();
+                FragmentTransaction ft = cal.getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.frameContainer, new SearchProduct());
+                ft.commit();
 
                 break;
         }

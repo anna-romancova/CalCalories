@@ -95,8 +95,6 @@ public class UserClient {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
-        }finally {
-            closeWriters();
         }
 
         return user;
@@ -175,8 +173,6 @@ public class UserClient {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
-        }finally {
-            closeWriters();
         }
 
         return us;
