@@ -55,7 +55,7 @@ public class SQLiteConnector extends SQLiteOpenHelper {
 
     /*---methods of History----*/
     /*insert*/
-    public long saveHistoryMenu(User user) {
+    public User saveHistoryMenu(User user) {
 
         Gson gs = new Gson();
         String history = gs.toJson(user.getHistoryFoods().get(0));
@@ -68,9 +68,10 @@ public class SQLiteConnector extends SQLiteOpenHelper {
 
 
         long id = db.insert("historyMenu", null, values);
+        user.getHistoryFoods().get(0).clear();
 
 
-        return id;
+        return user;
     }
 
     /*Update*/

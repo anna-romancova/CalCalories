@@ -28,6 +28,8 @@ import java.util.ArrayList;
 
 import edu.itstap.calculator.Food;
 import edu.itstap.calculator.FoodInHistory;
+import edu.itstap.calculator.User;
+
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
@@ -217,14 +219,17 @@ public class ListOfDietProduct extends Fragment implements View.OnClickListener 
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.saveHistory:
-               connector.saveHistoryMenu(cal.getUser());
+              User us= connector.saveHistoryMenu(cal.getUser());
+              cal.setUser(us);
+
                 Toast.makeText(getContext(),"Save your history",Toast.LENGTH_SHORT).show();
-                cal.getUser().getHistoryFoods().clear();
+                UpdateView();
+                updateTextResult();
 
                 cal.invalidateOptionsMenu();
-                FragmentTransaction ft = cal.getSupportFragmentManager().beginTransaction();
+               /* FragmentTransaction ft = cal.getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.frameContainer, new SearchProduct());
-                ft.commit();
+                ft.commit();*/
 
                 break;
         }
